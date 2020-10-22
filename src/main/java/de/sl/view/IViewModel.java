@@ -11,8 +11,6 @@ public interface IViewModel<C> {
 
     C getBgColor();
 
-    List<IViewType> getViewTypes();
-    
     List<IView<C>> getViews();
 
     // todo: move to different interface ??
