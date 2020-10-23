@@ -12,32 +12,84 @@ import java.util.List;
  */
 public class ExampleModel implements IViewModel<Color> {
 
+    private static final float CHANGE_PERCENTAGE = 0.05f;
+
     private Color bgColor = Color.BLACK;
 
-    private IView<Color> view;
+    private List<IView<Color>> views = new ArrayList<>();
 
-    public ExampleModel(IView<Color> view) {
-        this.view = view;
+    private IView<Color> activeView;
+
+    public void addView(IView<Color> view) {
+        views.add(view);
     }
 
     public boolean greater() {
-        final float newWidth = view.getWPercentage()*1.1f;
-        final float newHeight = view.getHPercentage()*1.1f;
-        if(newHeight+view.getYPercentage()<1.0f && newWidth+view.getXPercentage()<1.0f) {
-            view.setWPercentage(newWidth);
-            view.setHPercentage(newHeight);
-            return true;
+        if(activeView!=null) {
+            final float newWidth = activeView.getWPercentage() + CHANGE_PERCENTAGE;
+            final float newHeight = activeView.getHPercentage() + CHANGE_PERCENTAGE;
+            if(newHeight+activeView.getYPercentage()<=1.0f && newWidth+activeView.getXPercentage()<=1.0f) {
+                activeView.setWPercentage(newWidth);
+                activeView.setHPercentage(newHeight);
+                return true;
+            }
         }
         return false;
     }
 
     public boolean smaller() {
-        final float newWidth = view.getWPercentage()*0.9f;
-        final float newHeight = view.getHPercentage()*0.9f;
-        if(newHeight>0.01f && newWidth>0.01f) {
-            view.setWPercentage(newWidth);
-            view.setHPercentage(newHeight);
-            return true;
+        if(activeView!=null) {
+            final float newWidth = activeView.getWPercentage() - CHANGE_PERCENTAGE;
+            final float newHeight = activeView.getHPercentage() - CHANGE_PERCENTAGE;
+            if (newHeight > 0.0f && newWidth > 0.0f) {
+                activeView.setWPercentage(newWidth);
+                activeView.setHPercentage(newHeight);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean moveLeft() {
+        if(activeView!=null) {
+            final float newX = activeView.getXPercentage() - CHANGE_PERCENTAGE;
+            if (newX >= 0.0f) {
+                activeView.setXPercentage(newX);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean moveRight() {
+        if(activeView!=null) {
+            final float newX = activeView.getXPercentage() + CHANGE_PERCENTAGE;
+            if (newX + activeView.getWPercentage() <= 1.0f) {
+                activeView.setXPercentage(newX);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean moveUp() {
+        if(activeView!=null) {
+            final float newY = activeView.getYPercentage() - CHANGE_PERCENTAGE;
+            if (newY >= 0.0f) {
+                activeView.setYPercentage(newY);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean moveDown() {
+        if(activeView!=null) {
+            final float newY = activeView.getYPercentage() + CHANGE_PERCENTAGE;
+            if (newY + activeView.getHPercentage() <= 1.0f) {
+                activeView.setYPercentage(newY);
+                return true;
+            }
         }
         return false;
     }
@@ -54,14 +106,17 @@ public class ExampleModel implements IViewModel<Color> {
 
     @Override
     public List<IView<Color>> getViews() {
-        final List<IView<Color>> viewList = new ArrayList<>(1);
-        viewList.add(view);
-        return viewList;
+        return views;
     }
 
     @Override
     public void touchDown(float xPercent, float yPercent) {
-
+        for(IView<Color> view : views) {
+            if(view.isInside(xPercent, yPercent)) {
+                activeView = view;
+                return;
+            }
+        }
     }
 
     @Override

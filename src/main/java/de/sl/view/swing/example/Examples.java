@@ -13,6 +13,11 @@ import java.awt.event.ActionListener;
  */
 public class Examples extends JFrame implements Runnable, ActionListener {
 
+    private static final String ARROW_LEFT = "\u2190";
+    private static final String ARROW_RIGHT = "\u2192";
+    private static final String ARROW_UP = "\u2191";
+    private static final String ARROW_DOWN = "\u2193";
+
     private ExampleModel model;
 
     private SwingPanel board;
@@ -23,6 +28,10 @@ public class Examples extends JFrame implements Runnable, ActionListener {
 
     private JButton bGreater;
     private JButton bSmaller;
+    private JButton bLeft;
+    private JButton bRight;
+    private JButton bUp;
+    private JButton bDown;
 
     private Examples() {
 
@@ -32,14 +41,23 @@ public class Examples extends JFrame implements Runnable, ActionListener {
     }
 
     private ExampleModel buildModel() {
-        final Rect<Color> rect = new Rect<>(Color.WHITE);
+        final ExampleModel model = new ExampleModel();
 
-        rect.setXPercentage(0.25f);
-        rect.setYPercentage(0.25f);
-        rect.setWPercentage(0.5f);
-        rect.setHPercentage(0.5f);
+        Rect<Color> rect = new Rect<>(Color.WHITE);
+        rect.setXPercentage(0.1f);
+        rect.setYPercentage(0.1f);
+        rect.setWPercentage(0.25f);
+        rect.setHPercentage(0.25f);
+        model.addView(rect);
 
-        return new ExampleModel(rect);
+        rect = new Rect<>(Color.YELLOW);
+        rect.setXPercentage(0.2f);
+        rect.setYPercentage(0.2f);
+        rect.setWPercentage(0.25f);
+        rect.setHPercentage(0.25f);
+        model.addView(rect);
+
+        return model;
     }
 
     private void initUI() {
@@ -59,6 +77,22 @@ public class Examples extends JFrame implements Runnable, ActionListener {
         bSmaller.addActionListener(this);
         buttonPanel.add(bSmaller);
 
+        bLeft = new JButton(ARROW_LEFT);
+        bLeft.addActionListener(this);
+        buttonPanel.add(bLeft);
+
+        bRight = new JButton(ARROW_RIGHT);
+        bRight.addActionListener(this);
+        buttonPanel.add(bRight);
+
+        bUp = new JButton(ARROW_UP);
+        bUp.addActionListener(this);
+        buttonPanel.add(bUp);
+
+        bDown = new JButton(ARROW_DOWN);
+        bDown.addActionListener(this);
+        buttonPanel.add(bDown);
+
         setSize(800, 600);
         setTitle("examples 1.0");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,11 +102,17 @@ public class Examples extends JFrame implements Runnable, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==bGreater) {
-            bGreater.setEnabled(model.greater());
-            bSmaller.setEnabled(true);
+            model.greater();
         } else if(e.getSource()==bSmaller) {
-            bSmaller.setEnabled(model.smaller());
-            bGreater.setEnabled(true);
+            model.smaller();
+        } else if(e.getSource()==bLeft) {
+            model.moveLeft();
+        } else if(e.getSource()==bRight) {
+            model.moveRight();
+        } else if(e.getSource()==bUp) {
+            model.moveUp();
+        } else if(e.getSource()==bDown) {
+            model.moveDown();
         }
     }
 
