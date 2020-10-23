@@ -2,6 +2,8 @@ package de.sl.view.swing.example;
 
 import de.sl.view.IView;
 import de.sl.view.IViewModel;
+import de.sl.view.LineProperties;
+import de.sl.view.Rect;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,12 +18,25 @@ public class ExampleModel implements IViewModel<Color> {
 
     private Color bgColor = Color.BLACK;
 
-    private List<IView<Color>> views = new ArrayList<>();
+    private final List<IView<Color>> views;
 
     private IView<Color> activeView;
 
-    public void addView(IView<Color> view) {
-        views.add(view);
+    private final Rect<Color> activeViewBorder;
+
+    public ExampleModel(List<IView<Color>> views) {
+        this.views = views;
+
+        activeViewBorder = new Rect<>(null, new LineProperties<>(Color.RED, 2.0f));
+        activeViewBorder.setVisible(false);
+        views.add(activeViewBorder);
+    }
+
+    private void setBorderToView() {
+        activeViewBorder.setXPercentage(activeView.getXPercentage());
+        activeViewBorder.setYPercentage(activeView.getYPercentage());
+        activeViewBorder.setWPercentage(activeView.getWPercentage());
+        activeViewBorder.setHPercentage(activeView.getHPercentage());
     }
 
     public boolean greater() {
@@ -31,6 +46,7 @@ public class ExampleModel implements IViewModel<Color> {
             if(newHeight+activeView.getYPercentage()<=1.0f && newWidth+activeView.getXPercentage()<=1.0f) {
                 activeView.setWPercentage(newWidth);
                 activeView.setHPercentage(newHeight);
+                setBorderToView();
                 return true;
             }
         }
@@ -44,6 +60,7 @@ public class ExampleModel implements IViewModel<Color> {
             if (newHeight > 0.0f && newWidth > 0.0f) {
                 activeView.setWPercentage(newWidth);
                 activeView.setHPercentage(newHeight);
+                setBorderToView();
                 return true;
             }
         }
@@ -55,6 +72,7 @@ public class ExampleModel implements IViewModel<Color> {
             final float newX = activeView.getXPercentage() - CHANGE_PERCENTAGE;
             if (newX >= 0.0f) {
                 activeView.setXPercentage(newX);
+                setBorderToView();
                 return true;
             }
         }
@@ -66,6 +84,7 @@ public class ExampleModel implements IViewModel<Color> {
             final float newX = activeView.getXPercentage() + CHANGE_PERCENTAGE;
             if (newX + activeView.getWPercentage() <= 1.0f) {
                 activeView.setXPercentage(newX);
+                setBorderToView();
                 return true;
             }
         }
@@ -77,6 +96,7 @@ public class ExampleModel implements IViewModel<Color> {
             final float newY = activeView.getYPercentage() - CHANGE_PERCENTAGE;
             if (newY >= 0.0f) {
                 activeView.setYPercentage(newY);
+                setBorderToView();
                 return true;
             }
         }
@@ -88,6 +108,7 @@ public class ExampleModel implements IViewModel<Color> {
             final float newY = activeView.getYPercentage() + CHANGE_PERCENTAGE;
             if (newY + activeView.getHPercentage() <= 1.0f) {
                 activeView.setYPercentage(newY);
+                setBorderToView();
                 return true;
             }
         }
@@ -114,6 +135,8 @@ public class ExampleModel implements IViewModel<Color> {
         for(IView<Color> view : views) {
             if(view.isInside(xPercent, yPercent)) {
                 activeView = view;
+                setBorderToView();
+                activeViewBorder.setVisible(true);
                 return;
             }
         }

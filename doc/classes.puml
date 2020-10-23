@@ -1,0 +1,12 @@
+@startuml
+
+interface IView
+    abstract ViewBase
+        class Rect
+
+class LineProperties
+
+IView <|-- ViewBase
+ViewBase <|-- Rect
+
+@enduml

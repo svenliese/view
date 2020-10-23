@@ -1,5 +1,6 @@
 package de.sl.view.swing;
 
+import de.sl.view.LineProperties;
 import de.sl.view.Rect;
 
 import java.awt.*;
@@ -18,13 +19,23 @@ public class SwingRect extends SwingView {
 
     @Override
     public void draw(Graphics2D g2d, double width, double height) {
-        g2d.setColor(rect.getColor());
 
         final double x = rect.getXPercentage() * width;
         final double y = rect.getYPercentage() * height;
         final double w = rect.getWPercentage() * width;
         final double h = rect.getHPercentage() * height;
 
-        g2d.fillRect((int)x, (int)y, (int)w, (int)h);
+        final Color bgColor = rect.getColor();
+        if(bgColor!=null) {
+            g2d.setColor(bgColor);
+            g2d.fillRect((int) x, (int) y, (int) w, (int) h);
+        }
+
+        final LineProperties<Color> border = rect.getBorder();
+        if(border!=null) {
+            g2d.setStroke(new BasicStroke(border.getThickness()));
+            g2d.setColor(border.getColor());
+            g2d.drawRect((int)x, (int)y, (int)w, (int)h);
+        }
     }
 }

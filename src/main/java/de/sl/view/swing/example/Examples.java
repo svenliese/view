@@ -1,5 +1,6 @@
 package de.sl.view.swing.example;
 
+import de.sl.view.IView;
 import de.sl.view.Rect;
 import de.sl.view.swing.SwingPanel;
 
@@ -7,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author SL
@@ -41,23 +44,23 @@ public class Examples extends JFrame implements Runnable, ActionListener {
     }
 
     private ExampleModel buildModel() {
-        final ExampleModel model = new ExampleModel();
+        final List<IView<Color>> views = new ArrayList<>();
 
         Rect<Color> rect = new Rect<>(Color.WHITE);
         rect.setXPercentage(0.1f);
         rect.setYPercentage(0.1f);
         rect.setWPercentage(0.25f);
         rect.setHPercentage(0.25f);
-        model.addView(rect);
+        views.add(rect);
 
         rect = new Rect<>(Color.YELLOW);
         rect.setXPercentage(0.2f);
         rect.setYPercentage(0.2f);
         rect.setWPercentage(0.25f);
         rect.setHPercentage(0.25f);
-        model.addView(rect);
+        views.add(rect);
 
-        return model;
+        return new ExampleModel(views);
     }
 
     private void initUI() {
