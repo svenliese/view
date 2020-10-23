@@ -53,4 +53,9 @@ public class SwingColorFactory implements IColorFactory<Color> {
     public Color getWhite() {
         return Color.WHITE;
     }
+
+    @Override
+    public Color getColor(int red, int green, int blue) {
+        return new Color(red, green, blue);
+    }
 }

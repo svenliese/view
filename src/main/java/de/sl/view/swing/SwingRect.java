@@ -33,7 +33,7 @@ public class SwingRect extends SwingView {
 
         final LineProperties<Color> border = rect.getBorder();
         if(border!=null) {
-            g2d.setStroke(new BasicStroke(border.getThickness()));
+            g2d.setStroke(new BasicStroke(border.calculateThickness((float)Math.min(w, h))));
             g2d.setColor(border.getColor());
             g2d.drawRect((int)x, (int)y, (int)w, (int)h);
         }

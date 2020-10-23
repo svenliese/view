@@ -1,15 +1,11 @@
-package de.sl.view.swing.example;
+package de.sl.view.swing;
 
-import de.sl.view.IView;
-import de.sl.view.Rect;
-import de.sl.view.swing.SwingPanel;
+import de.sl.model.ExampleModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author SL
@@ -38,29 +34,9 @@ public class Examples extends JFrame implements Runnable, ActionListener {
 
     private Examples() {
 
-        model = buildModel();
+        model = new ExampleModel<>(new SwingColorFactory());
 
         initUI();
-    }
-
-    private ExampleModel buildModel() {
-        final List<IView<Color>> views = new ArrayList<>();
-
-        Rect<Color> rect = new Rect<>(Color.WHITE);
-        rect.setXPercentage(0.1f);
-        rect.setYPercentage(0.1f);
-        rect.setWPercentage(0.25f);
-        rect.setHPercentage(0.25f);
-        views.add(rect);
-
-        rect = new Rect<>(Color.YELLOW);
-        rect.setXPercentage(0.2f);
-        rect.setYPercentage(0.2f);
-        rect.setWPercentage(0.25f);
-        rect.setHPercentage(0.25f);
-        views.add(rect);
-
-        return new ExampleModel(views);
     }
 
     private void initUI() {

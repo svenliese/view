@@ -7,10 +7,12 @@ public class LineProperties<C> {
 
     private C color;
     private float thickness;
+    private boolean isPercentage;
 
-    public LineProperties(C color, float thickness) {
+    public LineProperties(C color, float thickness, boolean isPercentage) {
         this.color = color;
         this.thickness = thickness;
+        this.isPercentage = isPercentage;
     }
 
     public C getColor() {
@@ -21,11 +23,26 @@ public class LineProperties<C> {
         this.color = color;
     }
 
+    public float calculateThickness(float parentSize) {
+        if(isPercentage) {
+            return parentSize * thickness;
+        }
+        return thickness;
+    }
+
     public float getThickness() {
         return thickness;
     }
 
     public void setThickness(float thickness) {
         this.thickness = thickness;
+    }
+
+    public boolean isPercentage() {
+        return isPercentage;
+    }
+
+    public void setPercentage(boolean percentage) {
+        isPercentage = percentage;
     }
 }

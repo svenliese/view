@@ -1,35 +1,56 @@
-package de.sl.view.swing.example;
+package de.sl.model;
 
-import de.sl.view.IView;
-import de.sl.view.IViewModel;
-import de.sl.view.LineProperties;
-import de.sl.view.Rect;
+import de.sl.view.*;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author SL
  */
-public class ExampleModel implements IViewModel<Color> {
+public class ExampleModel<C> implements IViewModel<C> {
 
     private static final float CHANGE_PERCENTAGE = 0.05f;
 
-    private Color bgColor = Color.BLACK;
+    private C bgColor;
 
-    private final List<IView<Color>> views;
+    private final List<IView<C>> views;
 
-    private IView<Color> activeView;
+    private IView<C> activeView;
 
-    private final Rect<Color> activeViewBorder;
+    private final Rect<C> activeViewBorder;
 
-    public ExampleModel(List<IView<Color>> views) {
-        this.views = views;
+    public ExampleModel(IColorFactory<C> colorFactory) {
+        this.views = buildViews(colorFactory);
 
-        activeViewBorder = new Rect<>(null, new LineProperties<>(Color.RED, 2.0f));
+        bgColor = colorFactory.getBlack();
+
+        activeViewBorder = new Rect<>(null, new LineProperties<>(colorFactory.getRed(), 2.0f, false));
         activeViewBorder.setVisible(false);
         views.add(activeViewBorder);
+    }
+
+    private List<IView<C>> buildViews(IColorFactory<C> colorFactory) {
+        final List<IView<C>> views = new ArrayList<>();
+
+        Rect<C> rect = new Rect<>(
+            colorFactory.getWhite(),
+            new LineProperties<>(colorFactory.getLightGray(), 0.1f, true)
+        );
+        rect.setXPercentage(0.1f);
+        rect.setYPercentage(0.1f);
+        rect.setWPercentage(0.25f);
+        rect.setHPercentage(0.25f);
+        views.add(rect);
+
+        rect = new Rect<>(colorFactory.getColor(100, 10, 200));
+        rect.setXPercentage(0.2f);
+        rect.setYPercentage(0.2f);
+        rect.setWPercentage(0.25f);
+        rect.setHPercentage(0.25f);
+        views.add(rect);
+
+        return views;
     }
 
     private void setBorderToView() {
@@ -39,100 +60,78 @@ public class ExampleModel implements IViewModel<Color> {
         activeViewBorder.setHPercentage(activeView.getHPercentage());
     }
 
-    public boolean greater() {
+    public void greater() {
         if(activeView!=null) {
             final float newWidth = activeView.getWPercentage() + CHANGE_PERCENTAGE;
             final float newHeight = activeView.getHPercentage() + CHANGE_PERCENTAGE;
-            if(newHeight+activeView.getYPercentage()<=1.0f && newWidth+activeView.getXPercentage()<=1.0f) {
-                activeView.setWPercentage(newWidth);
-                activeView.setHPercentage(newHeight);
-                setBorderToView();
-                return true;
-            }
+            activeView.setWPercentage(newWidth);
+            activeView.setHPercentage(newHeight);
+            setBorderToView();
         }
-        return false;
     }
 
-    public boolean smaller() {
+    public void smaller() {
         if(activeView!=null) {
             final float newWidth = activeView.getWPercentage() - CHANGE_PERCENTAGE;
             final float newHeight = activeView.getHPercentage() - CHANGE_PERCENTAGE;
-            if (newHeight > 0.0f && newWidth > 0.0f) {
+            if(newHeight>0.0f && newWidth>0.0f) {
                 activeView.setWPercentage(newWidth);
                 activeView.setHPercentage(newHeight);
                 setBorderToView();
-                return true;
             }
         }
-        return false;
     }
 
-    public boolean moveLeft() {
+    public void moveLeft() {
         if(activeView!=null) {
             final float newX = activeView.getXPercentage() - CHANGE_PERCENTAGE;
-            if (newX >= 0.0f) {
-                activeView.setXPercentage(newX);
-                setBorderToView();
-                return true;
-            }
+            activeView.setXPercentage(newX);
+            setBorderToView();
         }
-        return false;
     }
 
-    public boolean moveRight() {
+    public void moveRight() {
         if(activeView!=null) {
             final float newX = activeView.getXPercentage() + CHANGE_PERCENTAGE;
-            if (newX + activeView.getWPercentage() <= 1.0f) {
-                activeView.setXPercentage(newX);
-                setBorderToView();
-                return true;
-            }
+            activeView.setXPercentage(newX);
+            setBorderToView();
         }
-        return false;
     }
 
-    public boolean moveUp() {
+    public void moveUp() {
         if(activeView!=null) {
             final float newY = activeView.getYPercentage() - CHANGE_PERCENTAGE;
-            if (newY >= 0.0f) {
-                activeView.setYPercentage(newY);
-                setBorderToView();
-                return true;
-            }
+            activeView.setYPercentage(newY);
+            setBorderToView();
         }
-        return false;
     }
 
-    public boolean moveDown() {
+    public void moveDown() {
         if(activeView!=null) {
             final float newY = activeView.getYPercentage() + CHANGE_PERCENTAGE;
-            if (newY + activeView.getHPercentage() <= 1.0f) {
-                activeView.setYPercentage(newY);
-                setBorderToView();
-                return true;
-            }
+            activeView.setYPercentage(newY);
+            setBorderToView();
         }
-        return false;
     }
 
     @Override
-    public void setBgColor(Color bgColor) {
+    public void setBgColor(C bgColor) {
         this.bgColor = bgColor;
     }
 
     @Override
-    public Color getBgColor() {
+    public C getBgColor() {
         return bgColor;
     }
 
     @Override
-    public List<IView<Color>> getViews() {
+    public List<IView<C>> getViews() {
         return views;
     }
 
     @Override
     public void touchDown(float xPercent, float yPercent) {
-        for(IView<Color> view : views) {
+        for(IView<C> view : views) {
             if(view.isInside(xPercent, yPercent)) {
                 activeView = view;
                 setBorderToView();

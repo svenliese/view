@@ -22,4 +22,6 @@ public interface IColorFactory<C> {
     C getYellow();
 
     C getWhite();
+
+    C getColor(int red, int green, int blue);
 }
