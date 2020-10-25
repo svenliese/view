@@ -96,7 +96,7 @@ public abstract class SwingView implements IView<Color> {
         view.setUserObject(userObject);
     }
 
-    protected String trim(String origin, Graphics2D g2d, double width) {
+    protected static String trim(String origin, Graphics2D g2d, double width) {
         final FontMetrics fm = g2d.getFontMetrics();
 
         String newText = origin;
@@ -113,16 +113,31 @@ public abstract class SwingView implements IView<Color> {
         return newText;
     }
 
-    protected void drawText(Graphics2D g2d, double x, double y, double w, double h, String text, int orientation) {
+    protected static double getTextStart(double originStart, double textWidth, double bounds, int alignment) {
+        if(alignment==SimpleText.LEFT) {
+            return originStart;
+        }
+        return (originStart + (bounds - textWidth) / 2.0d);
+    }
+
+    protected static void drawText(Graphics2D g2d, SimpleText<Color> data, double width, double height) {
 
         final AffineTransform originTransform = g2d.getTransform();
 
+        g2d.setFont(new Font(g2d.getFont().getFontName(), Font.PLAIN, data.getTextSize()));
         final FontMetrics fm = g2d.getFontMetrics();
+
+        final double x = data.getXPercentage() * width;
+        final double y = data.getYPercentage() * height;
+        final double w = data.getWPercentage() * width;
+        final double h = data.getHPercentage() * height;
 
         final double textX;
         final double textY;
 
-        if(orientation == SimpleText.VERTICAL) {
+        String text = data.getText();
+
+        if(data.getOrientation() == SimpleText.VERTICAL) {
             final double xm = x + w/2;
             final double ym = y + h/2;
 
@@ -134,7 +149,7 @@ public abstract class SwingView implements IView<Color> {
             text = trim(text, g2d, nw);
 
             final Rectangle2D textBounds = fm.getStringBounds(text, g2d);
-            textX = nx;
+            textX = getTextStart(nx, textBounds.getWidth(), nw, data.getHAlign());
             textY = (ny + (nh - textBounds.getHeight()) / 2.0d) + fm.getAscent();
 
             AffineTransform at = new AffineTransform();
@@ -143,10 +158,11 @@ public abstract class SwingView implements IView<Color> {
 
         } else {
             final Rectangle2D textBounds = fm.getStringBounds(text, g2d);
-            textX = (x + (w - textBounds.getWidth()) / 2.0d);
+            textX = getTextStart(x, textBounds.getWidth(), w, data.getHAlign());
             textY = (y + (h - textBounds.getHeight()) / 2.0d) + fm.getAscent();
         }
 
+        g2d.setColor(data.getColor());
         g2d.drawString(text, (int)textX, (int)textY);
 
         g2d.setTransform(originTransform);

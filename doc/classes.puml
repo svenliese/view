@@ -3,10 +3,27 @@
 interface IView
     abstract ViewBase
         class Rect
+        class SimpleText
+            class TextButton
+        class Image
+    abstract SwingView
+        class SwingRect
+        class SwingSimpleText
 
 class LineProperties
 
 IView <|-- ViewBase
 ViewBase <|-- Rect
+ViewBase <|-- SimpleText
+ViewBase <|-- Image
+
+SimpleText <|-- TextButton
+
+IView <|-- SwingView
+SwingView <|-- SwingRect
+SwingView <|-- SwingSimpleText
+
+Rect <.. SwingRect
+SimpleText <.. SwingSimpleText
 
 @enduml

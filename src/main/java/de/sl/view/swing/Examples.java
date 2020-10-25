@@ -1,6 +1,8 @@
 package de.sl.view.swing;
 
 import de.sl.model.ExampleModel;
+import de.sl.model.IModelListener;
+import de.sl.view.IView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +12,7 @@ import java.awt.event.ActionListener;
 /**
  * @author SL
  */
-public class Examples extends JFrame implements Runnable, ActionListener {
+public class Examples extends JFrame implements Runnable, ActionListener, IModelListener<Color> {
 
     private static final String ARROW_LEFT = "\u2190";
     private static final String ARROW_RIGHT = "\u2192";
@@ -35,6 +37,7 @@ public class Examples extends JFrame implements Runnable, ActionListener {
     private Examples() {
 
         model = new ExampleModel<>(new SwingColorFactory());
+        model.setModelListener(this);
 
         initUI();
     }
@@ -76,6 +79,27 @@ public class Examples extends JFrame implements Runnable, ActionListener {
         setTitle("examples 1.0");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+
+        changeInputState(false);
+    }
+
+    private void changeInputState(boolean enabled) {
+        bGreater.setEnabled(enabled);
+        bSmaller.setEnabled(enabled);
+        bLeft.setEnabled(enabled);
+        bRight.setEnabled(enabled);
+        bUp.setEnabled(enabled);
+        bDown.setEnabled(enabled);
+    }
+
+    @Override
+    public void clickedOnView(IView<Color> view) {
+        changeInputState(true);
+    }
+
+    @Override
+    public void clickedInBackground() {
+        changeInputState(false);
     }
 
     @Override

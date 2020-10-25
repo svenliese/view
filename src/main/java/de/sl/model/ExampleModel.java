@@ -20,6 +20,8 @@ public class ExampleModel<C> implements IViewModel<C> {
 
     private final Rect<C> activeViewBorder;
 
+    private IModelListener<C> modelListener;
+
     public ExampleModel(IColorFactory<C> colorFactory) {
         this.views = buildViews(colorFactory);
 
@@ -50,6 +52,46 @@ public class ExampleModel<C> implements IViewModel<C> {
         rect.setHPercentage(0.25f);
         views.add(rect);
 
+        SimpleText<C> simpleText = new SimpleText<>("simple text H left", colorFactory.getWhite());
+        simpleText.setXPercentage(0.2f);
+        simpleText.setYPercentage(0.5f);
+        simpleText.setWPercentage(0.25f);
+        simpleText.setHPercentage(0.1f);
+        simpleText.setTextSize(12);
+        simpleText.setHAlign(SimpleText.LEFT);
+        simpleText.setOrientation(SimpleText.HORIZONTAL);
+        views.add(simpleText);
+
+        simpleText = new SimpleText<>("simple text H center", colorFactory.getWhite());
+        simpleText.setXPercentage(0.2f);
+        simpleText.setYPercentage(0.6f);
+        simpleText.setWPercentage(0.25f);
+        simpleText.setHPercentage(0.1f);
+        simpleText.setTextSize(14);
+        simpleText.setHAlign(SimpleText.CENTER);
+        simpleText.setOrientation(SimpleText.HORIZONTAL);
+        views.add(simpleText);
+
+        simpleText = new SimpleText<>("simple text V left", colorFactory.getWhite());
+        simpleText.setXPercentage(0.05f);
+        simpleText.setYPercentage(0.5f);
+        simpleText.setWPercentage(0.05f);
+        simpleText.setHPercentage(0.3f);
+        simpleText.setTextSize(12);
+        simpleText.setHAlign(SimpleText.LEFT);
+        simpleText.setOrientation(SimpleText.VERTICAL);
+        views.add(simpleText);
+
+        simpleText = new SimpleText<>("simple text V center", colorFactory.getWhite());
+        simpleText.setXPercentage(0.1f);
+        simpleText.setYPercentage(0.5f);
+        simpleText.setWPercentage(0.05f);
+        simpleText.setHPercentage(0.3f);
+        simpleText.setTextSize(12);
+        simpleText.setHAlign(SimpleText.CENTER);
+        simpleText.setOrientation(SimpleText.VERTICAL);
+        views.add(simpleText);
+
         return views;
     }
 
@@ -58,6 +100,10 @@ public class ExampleModel<C> implements IViewModel<C> {
         activeViewBorder.setYPercentage(activeView.getYPercentage());
         activeViewBorder.setWPercentage(activeView.getWPercentage());
         activeViewBorder.setHPercentage(activeView.getHPercentage());
+    }
+
+    public void setModelListener(IModelListener<C> modelListener) {
+        this.modelListener = modelListener;
     }
 
     public void greater() {
@@ -136,8 +182,19 @@ public class ExampleModel<C> implements IViewModel<C> {
                 activeView = view;
                 setBorderToView();
                 activeViewBorder.setVisible(true);
+
+                if(modelListener!=null) {
+                    modelListener.clickedOnView(view);
+                }
+
                 return;
             }
+        }
+        activeViewBorder.setVisible(false);
+        activeView = null;
+
+        if(modelListener!=null) {
+            modelListener.clickedInBackground();
         }
     }
 

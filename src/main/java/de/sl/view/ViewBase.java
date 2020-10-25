@@ -5,6 +5,10 @@ package de.sl.view;
  */
 public abstract class ViewBase<C> implements IView<C> {
 
+    public static final String ERR_NULL_PARAM = "parameter should not be null";
+    public static final String ERR_UNKNOWN_VALUE = "unknown value";
+    public static final String ERR_INVALID_VALUE = "invalid value";
+
     protected float xPercentage;
     protected float yPercentage;
     protected float wPercentage;

@@ -1,7 +1,5 @@
 package de.sl.view.swing;
 
-
-import de.sl.view.SimpleText;
 import de.sl.view.TextButton;
 
 import java.awt.*;
@@ -29,8 +27,7 @@ public class SwingTextButton extends SwingView {
         g2d.setColor(textButton.getBgColor());
         g2d.fillRect((int)x, (int)y, (int)w, (int)h);
 
-        g2d.setColor(textButton.getTextColor());
-        drawText(g2d, x, y, w, h, textButton.getText(), SimpleText.HORIZONTAL);
+        drawText(g2d, textButton, width, height);
 
         g2d.setColor(textButton.getBorderColor());
         g2d.drawRoundRect((int)x, (int)y, (int)w, (int)h, 10, 10);
