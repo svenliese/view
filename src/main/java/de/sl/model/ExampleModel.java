@@ -92,6 +92,14 @@ public class ExampleModel<C> implements IViewModel<C> {
         simpleText.setOrientation(SimpleText.VERTICAL);
         views.add(simpleText);
 
+        TextButton<C> textButton = new TextButton<>("button", colorFactory.getBlue(), colorFactory.getLightGray(), colorFactory.getBlue());
+        textButton.setXPercentage(0.4f);
+        textButton.setYPercentage(0.05f);
+        textButton.setWPercentage(0.1f);
+        textButton.setHPercentage(0.05f);
+        textButton.setTextSize(16);
+        views.add(textButton);
+
         return views;
     }
 

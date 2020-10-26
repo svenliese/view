@@ -8,14 +8,16 @@ import java.awt.*;
 /**
  * @author SL
  */
-public class SimpleTextTest extends TestBase {
+public class TextButtonTest {
+
+    private static final String EXCEPTION_EXPECTED = "exception expected";
 
     @Test
     void testText() {
         final String text1 = "1";
         final String text2 = "2";
 
-        final SimpleText<Color> testObj = new SimpleText<>(text1, Color.BLACK);
+        final TextButton<Color> testObj = new TextButton<>(text1, Color.WHITE, Color.BLACK, Color.GRAY);
         Assertions.assertEquals(text1, testObj.getText());
 
         try {
@@ -34,7 +36,7 @@ public class SimpleTextTest extends TestBase {
         final Color color1 = Color.BLACK;
         final Color color2 = Color.WHITE;
 
-        final SimpleText<Color> testObj = new SimpleText<>("test", color1);
+        final TextButton<Color> testObj = new TextButton<>("test", color1, Color.BLACK, Color.GRAY);
         Assertions.assertEquals(color1, testObj.getTextColor());
 
         try {
@@ -49,9 +51,47 @@ public class SimpleTextTest extends TestBase {
     }
 
     @Test
+    void testBgColor() {
+        final Color color1 = Color.BLACK;
+        final Color color2 = Color.WHITE;
+
+        final TextButton<Color> testObj = new TextButton<>("test", Color.WHITE, color1, Color.GRAY);
+        Assertions.assertEquals(color1, testObj.getBgColor());
+
+        try {
+            testObj.setBgColor(null);
+            Assertions.fail(EXCEPTION_EXPECTED);
+        } catch(IllegalArgumentException ex) {
+            Assertions.assertEquals(ViewBase.ERR_NULL_PARAM, ex.getMessage());
+        }
+
+        testObj.setBgColor(color2);
+        Assertions.assertEquals(color2, testObj.getBgColor());
+    }
+
+    @Test
+    void testBorderColor() {
+        final Color color1 = Color.BLACK;
+        final Color color2 = Color.WHITE;
+
+        final TextButton<Color> testObj = new TextButton<>("test", Color.WHITE, Color.BLACK, color1);
+        Assertions.assertEquals(color1, testObj.getBorderColor());
+
+        try {
+            testObj.setBorderColor(null);
+            Assertions.fail(EXCEPTION_EXPECTED);
+        } catch(IllegalArgumentException ex) {
+            Assertions.assertEquals(ViewBase.ERR_NULL_PARAM, ex.getMessage());
+        }
+
+        testObj.setBorderColor(color2);
+        Assertions.assertEquals(color2, testObj.getBorderColor());
+    }
+
+    @Test
     void testHAlign() {
 
-        final SimpleText<Color> testObj = new SimpleText<>("test", Color.BLACK);
+        final TextButton<Color> testObj = new TextButton<>("test", Color.WHITE, Color.BLACK, Color.GRAY);
         Assertions.assertEquals(SimpleText.CENTER, testObj.getHAlign());
 
         try {
@@ -68,7 +108,7 @@ public class SimpleTextTest extends TestBase {
     @Test
     void testOrientation() {
 
-        final SimpleText<Color> testObj = new SimpleText<>("test", Color.BLACK);
+        final TextButton<Color> testObj = new TextButton<>("test", Color.WHITE, Color.BLACK, Color.GRAY);
         Assertions.assertEquals(SimpleText.HORIZONTAL, testObj.getOrientation());
 
         try {
@@ -85,7 +125,7 @@ public class SimpleTextTest extends TestBase {
     @Test
     void testTextSize() {
 
-        final SimpleText<Color> testObj = new SimpleText<>("test", Color.BLACK);
+        final TextButton<Color> testObj = new TextButton<>("test", Color.WHITE, Color.BLACK, Color.GRAY);
         Assertions.assertEquals(8, testObj.getTextSize());
 
         try {

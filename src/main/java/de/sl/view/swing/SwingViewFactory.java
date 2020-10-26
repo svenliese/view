@@ -16,10 +16,10 @@ public class SwingViewFactory {
         SwingView view = null;
         if(e instanceof Rect) {
             view = new SwingRect((Rect<Color>)e);
-        } else if(e instanceof SimpleText) {
-            view = new SwingSimpleText((SimpleText<Color>)e);
         } else if(e instanceof TextButton) {
             view = new SwingTextButton((TextButton<Color>)e);
+        } else if(e instanceof SimpleText) {
+            view = new SwingSimpleText((SimpleText<Color>) e);
         }
         return view;
     }

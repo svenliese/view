@@ -12,15 +12,15 @@ public class SimpleText<C> extends ViewBase<C> {
     public static final int VERTICAL = 2;
 
     private String text;
-    private C color;
+    private C textColor;
     private int hAlign = CENTER;
     private int size = 8;
 
     private int orientation = HORIZONTAL;
 
-    public SimpleText(String text, C color) {
+    public SimpleText(String text, C textColor) {
         this.text = text;
-        this.color = color;
+        this.textColor = textColor;
     }
 
     public String getText() {
@@ -34,15 +34,15 @@ public class SimpleText<C> extends ViewBase<C> {
         this.text = text;
     }
 
-    public C getColor() {
-        return color;
+    public C getTextColor() {
+        return textColor;
     }
 
-    public void setColor(C color) {
+    public void setTextColor(C color) {
         if(color==null) {
             throw new IllegalArgumentException(ERR_NULL_PARAM);
         }
-        this.color = color;
+        this.textColor = color;
     }
 
     public int getHAlign() {

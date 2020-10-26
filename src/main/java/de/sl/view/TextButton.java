@@ -6,27 +6,37 @@ package de.sl.view;
 public class TextButton<C> extends SimpleText<C> {
 
     private C bgColor;
-    private C borderColor;
+    private final LineProperties<C> border;
 
     public TextButton(String text, C textColor, C bgColor, C borderColor) {
         super(text, textColor);
         this.bgColor = bgColor;
-        this.borderColor = borderColor;
+        this.border = new LineProperties<>(borderColor, 2.0f, false);
     }
 
     public C getBgColor() {
         return bgColor;
     }
 
-    public void setBgColor(C bgColor) {
-        this.bgColor = bgColor;
+    public void setBgColor(C color) {
+        if(color==null) {
+            throw new IllegalArgumentException(ERR_NULL_PARAM);
+        }
+        this.bgColor = color;
     }
 
     public C getBorderColor() {
-        return borderColor;
+        return border.getColor();
     }
 
-    public void setBorderColor(C borderColor) {
-        this.borderColor = borderColor;
+    public void setBorderColor(C color) {
+        if(color==null) {
+            throw new IllegalArgumentException(ERR_NULL_PARAM);
+        }
+        this.border.setColor(color);
+    }
+
+    public LineProperties<C> getBorder() {
+        return border;
     }
 }

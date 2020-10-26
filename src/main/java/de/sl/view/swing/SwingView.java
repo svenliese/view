@@ -162,7 +162,7 @@ public abstract class SwingView implements IView<Color> {
             textY = (y + (h - textBounds.getHeight()) / 2.0d) + fm.getAscent();
         }
 
-        g2d.setColor(data.getColor());
+        g2d.setColor(data.getTextColor());
         g2d.drawString(text, (int)textX, (int)textY);
 
         g2d.setTransform(originTransform);

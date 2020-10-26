@@ -1,5 +1,6 @@
 package de.sl.view.swing;
 
+import de.sl.view.LineProperties;
 import de.sl.view.TextButton;
 
 import java.awt.*;
@@ -25,11 +26,15 @@ public class SwingTextButton extends SwingView {
         final double h = textButton.getHPercentage() * height;
 
         g2d.setColor(textButton.getBgColor());
-        g2d.fillRect((int)x, (int)y, (int)w, (int)h);
+        g2d.fillRoundRect((int)x, (int)y, (int)w, (int)h, 10, 10);
 
         drawText(g2d, textButton, width, height);
 
-        g2d.setColor(textButton.getBorderColor());
-        g2d.drawRoundRect((int)x, (int)y, (int)w, (int)h, 10, 10);
+        final LineProperties<Color> border = textButton.getBorder();
+        if(border!=null) {
+            g2d.setStroke(new BasicStroke(border.calculateThickness((float)Math.min(w, h))));
+            g2d.setColor(border.getColor());
+            g2d.drawRoundRect((int)x, (int)y, (int)w, (int)h, 10, 10);
+        }
     }
 }
