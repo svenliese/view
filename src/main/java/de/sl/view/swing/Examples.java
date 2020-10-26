@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 /**
  * @author SL
@@ -19,7 +20,7 @@ public class Examples extends JFrame implements Runnable, ActionListener, IModel
     private static final String ARROW_UP = "\u2191";
     private static final String ARROW_DOWN = "\u2193";
 
-    private transient ExampleModel<Color> model;
+    private transient ExampleModel<Color, BufferedImage> model;
 
     private SwingPanel board;
 
@@ -36,7 +37,7 @@ public class Examples extends JFrame implements Runnable, ActionListener, IModel
 
     private Examples() {
 
-        model = new ExampleModel<>(new SwingColorFactory());
+        model = new ExampleModel<>(new SwingColorFactory(), new SwingImageFactory());
         model.setModelListener(this);
 
         initUI();

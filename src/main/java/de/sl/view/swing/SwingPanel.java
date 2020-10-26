@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +16,11 @@ import java.util.List;
  */
 public class SwingPanel extends JPanel implements MouseListener {
 
-    private final transient IViewModel<Color> model;
+    private final transient IViewModel<Color, BufferedImage> model;
 
     private transient java.util.List<SwingView> swingObjects;
 
-    public SwingPanel(IViewModel<Color> model) {
+    public SwingPanel(IViewModel<Color, BufferedImage> model) {
         this.model = model;
 
         initialize();

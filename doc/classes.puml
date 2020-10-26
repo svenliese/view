@@ -10,6 +10,7 @@ interface IView
         class SwingRect
         class SwingSimpleText
         class SwingTextButton
+        class SwingImage
 
 class LineProperties
 
@@ -24,9 +25,11 @@ IView <|-- SwingView
 SwingView <|-- SwingRect
 SwingView <|-- SwingSimpleText
 SwingView <|-- SwingTextButton
+SwingView <|-- SwingImage
 
 Rect <.. SwingRect
 SimpleText <.. SwingSimpleText
 TextButton <.. SwingTextButton
+Image <.. SwingImage
 
 @enduml

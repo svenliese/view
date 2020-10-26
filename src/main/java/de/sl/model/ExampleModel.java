@@ -2,13 +2,14 @@ package de.sl.model;
 
 import de.sl.view.*;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author SL
  */
-public class ExampleModel<C> implements IViewModel<C> {
+public class ExampleModel<C, I> implements IViewModel<C, I> {
 
     private static final float CHANGE_PERCENTAGE = 0.05f;
 
@@ -22,8 +23,8 @@ public class ExampleModel<C> implements IViewModel<C> {
 
     private IModelListener<C> modelListener;
 
-    public ExampleModel(IColorFactory<C> colorFactory) {
-        this.views = buildViews(colorFactory);
+    public ExampleModel(IColorFactory<C> colorFactory, IImageFactory<I> imageFactory) {
+        this.views = buildViews(colorFactory, imageFactory);
 
         bgColor = colorFactory.getBlack();
 
@@ -32,7 +33,7 @@ public class ExampleModel<C> implements IViewModel<C> {
         views.add(activeViewBorder);
     }
 
-    private List<IView<C>> buildViews(IColorFactory<C> colorFactory) {
+    private List<IView<C>> buildViews(IColorFactory<C> colorFactory, IImageFactory<I> imageFactory) {
         final List<IView<C>> viewList = new ArrayList<>();
 
         Rect<C> rect = new Rect<>(
@@ -99,6 +100,21 @@ public class ExampleModel<C> implements IViewModel<C> {
         textButton.setHPercentage(0.05f);
         textButton.setTextSize(16);
         viewList.add(textButton);
+
+        de.sl.view.Image<C, I> image = new de.sl.view.Image<>(imageFactory.getImage("images/elfe.png"));
+        image.setXPercentage(0.6f);
+        image.setYPercentage(0.05f);
+        image.setWPercentage(0.2f);
+        image.setHPercentage(0.2f);
+        viewList.add(image);
+
+        image = new de.sl.view.Image<>(imageFactory.getImage("images/elfe.png"));
+        image.setXPercentage(0.6f);
+        image.setYPercentage(0.3f);
+        image.setWPercentage(0.2f);
+        image.setHPercentage(0.2f);
+        image.setMode(Image.FIT_TO_BOX);
+        viewList.add(image);
 
         return viewList;
     }

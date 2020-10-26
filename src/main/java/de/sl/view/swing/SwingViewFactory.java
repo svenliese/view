@@ -6,6 +6,7 @@ import de.sl.view.SimpleText;
 import de.sl.view.TextButton;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * @author SL
@@ -20,6 +21,8 @@ public class SwingViewFactory {
             view = new SwingTextButton((TextButton<Color>)e);
         } else if(e instanceof SimpleText) {
             view = new SwingSimpleText((SimpleText<Color>) e);
+        } else if(e instanceof de.sl.view.Image) {
+            view = new SwingImage((de.sl.view.Image<Color,BufferedImage>)e);
         }
         return view;
     }

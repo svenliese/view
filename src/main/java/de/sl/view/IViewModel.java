@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author SL
  */
-public interface IViewModel<C> {
+public interface IViewModel<C, I> {
 
     void setBgColor(C bgColor);
 

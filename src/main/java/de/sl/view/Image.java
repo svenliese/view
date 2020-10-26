@@ -3,16 +3,16 @@ package de.sl.view;
 /**
  * @author SL
  */
-public class Image<T, C> extends ViewBase<C> {
+public class Image<C, I> extends ViewBase<C> {
 
-    public static final int XY_IS_MIDDLE = 1;
-    public static final int CENTER_IN_BOX = 2;
+    public static final int USE_ORIGIN = 1;
+    public static final int FIT_TO_BOX = 2;
 
-    private T bitmap;
+    private I bitmap;
     private int alpha = 255;
-    private int mode = XY_IS_MIDDLE;
+    private int mode = USE_ORIGIN;
 
-    public Image(T bitmap) {
+    public Image(I bitmap) {
         this.bitmap = bitmap;
     }
 
@@ -32,11 +32,11 @@ public class Image<T, C> extends ViewBase<C> {
         this.alpha = alpha;
     }
 
-    public T getBitmap() {
+    public I getBitmap() {
         return bitmap;
     }
 
-    public void setBitmap(T bitmap) {
+    public void setBitmap(I bitmap) {
         this.bitmap = bitmap;
     }
 }
