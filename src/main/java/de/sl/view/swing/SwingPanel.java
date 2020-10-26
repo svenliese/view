@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class SwingPanel extends JPanel implements MouseListener {
 
-    private final IViewModel<Color> model;
+    private final transient IViewModel<Color> model;
 
-    private java.util.List<SwingView> swingObjects;
+    private transient java.util.List<SwingView> swingObjects;
 
     public SwingPanel(IViewModel<Color> model) {
         this.model = model;

@@ -19,7 +19,7 @@ public class Examples extends JFrame implements Runnable, ActionListener, IModel
     private static final String ARROW_UP = "\u2191";
     private static final String ARROW_DOWN = "\u2193";
 
-    private ExampleModel model;
+    private transient ExampleModel<Color> model;
 
     private SwingPanel board;
 
@@ -77,7 +77,7 @@ public class Examples extends JFrame implements Runnable, ActionListener, IModel
 
         setSize(800, 600);
         setTitle("examples 1.0");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         changeInputState(false);

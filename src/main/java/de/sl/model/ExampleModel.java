@@ -33,7 +33,7 @@ public class ExampleModel<C> implements IViewModel<C> {
     }
 
     private List<IView<C>> buildViews(IColorFactory<C> colorFactory) {
-        final List<IView<C>> views = new ArrayList<>();
+        final List<IView<C>> viewList = new ArrayList<>();
 
         Rect<C> rect = new Rect<>(
             colorFactory.getWhite(),
@@ -43,14 +43,14 @@ public class ExampleModel<C> implements IViewModel<C> {
         rect.setYPercentage(0.1f);
         rect.setWPercentage(0.25f);
         rect.setHPercentage(0.25f);
-        views.add(rect);
+        viewList.add(rect);
 
         rect = new Rect<>(colorFactory.getColor(100, 10, 200));
         rect.setXPercentage(0.2f);
         rect.setYPercentage(0.2f);
         rect.setWPercentage(0.25f);
         rect.setHPercentage(0.25f);
-        views.add(rect);
+        viewList.add(rect);
 
         SimpleText<C> simpleText = new SimpleText<>("simple text H left", colorFactory.getWhite());
         simpleText.setXPercentage(0.2f);
@@ -60,7 +60,7 @@ public class ExampleModel<C> implements IViewModel<C> {
         simpleText.setTextSize(12);
         simpleText.setHAlign(SimpleText.LEFT);
         simpleText.setOrientation(SimpleText.HORIZONTAL);
-        views.add(simpleText);
+        viewList.add(simpleText);
 
         simpleText = new SimpleText<>("simple text H center", colorFactory.getWhite());
         simpleText.setXPercentage(0.2f);
@@ -70,7 +70,7 @@ public class ExampleModel<C> implements IViewModel<C> {
         simpleText.setTextSize(14);
         simpleText.setHAlign(SimpleText.CENTER);
         simpleText.setOrientation(SimpleText.HORIZONTAL);
-        views.add(simpleText);
+        viewList.add(simpleText);
 
         simpleText = new SimpleText<>("simple text V left", colorFactory.getWhite());
         simpleText.setXPercentage(0.05f);
@@ -80,7 +80,7 @@ public class ExampleModel<C> implements IViewModel<C> {
         simpleText.setTextSize(12);
         simpleText.setHAlign(SimpleText.LEFT);
         simpleText.setOrientation(SimpleText.VERTICAL);
-        views.add(simpleText);
+        viewList.add(simpleText);
 
         simpleText = new SimpleText<>("simple text V center", colorFactory.getWhite());
         simpleText.setXPercentage(0.1f);
@@ -90,7 +90,7 @@ public class ExampleModel<C> implements IViewModel<C> {
         simpleText.setTextSize(12);
         simpleText.setHAlign(SimpleText.CENTER);
         simpleText.setOrientation(SimpleText.VERTICAL);
-        views.add(simpleText);
+        viewList.add(simpleText);
 
         TextButton<C> textButton = new TextButton<>("button", colorFactory.getBlue(), colorFactory.getLightGray(), colorFactory.getBlue());
         textButton.setXPercentage(0.4f);
@@ -98,9 +98,9 @@ public class ExampleModel<C> implements IViewModel<C> {
         textButton.setWPercentage(0.1f);
         textButton.setHPercentage(0.05f);
         textButton.setTextSize(16);
-        views.add(textButton);
+        viewList.add(textButton);
 
-        return views;
+        return viewList;
     }
 
     private void setBorderToView() {
