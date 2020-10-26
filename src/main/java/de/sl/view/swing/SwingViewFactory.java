@@ -1,9 +1,6 @@
 package de.sl.view.swing;
 
-import de.sl.view.IView;
-import de.sl.view.Rect;
-import de.sl.view.SimpleText;
-import de.sl.view.TextButton;
+import de.sl.view.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -23,6 +20,8 @@ public class SwingViewFactory {
             view = new SwingSimpleText((SimpleText<Color>) e);
         } else if(e instanceof de.sl.view.Image) {
             view = new SwingImage((de.sl.view.Image<Color,BufferedImage>)e);
+        } else if(e instanceof  de.sl.view.Line) {
+            view = new SwingLine((Line<Color>) e);
         }
         return view;
     }

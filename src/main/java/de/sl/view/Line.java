@@ -5,45 +5,42 @@ package de.sl.view;
  */
 public class Line<C> extends ViewBase<C> {
 
-    public static final int CAP_ROUND = 1;
-    public static final int CAP_SQUARE = 2;
-    public static final int CAP_BUTT = 3;
+    public static final int HORIZONTAL = 1;
+    public static final int VERTICAL = 2;
 
-    private int thickness;
-    private int color;
-    private int capMode;
+    private final LineProperties<C> properties;
 
-    public Line(int thickness, int color) {
-        this(thickness, color, CAP_ROUND);
+    private int mode = HORIZONTAL;
+
+    public Line(C color, float thickness) {
+        this.properties = new LineProperties<>(color, thickness, false);
     }
 
-    public Line(int thickness, int color, int capMode) {
-        this.thickness = thickness;
-        this.color = color;
-        this.capMode = capMode;
+    public int getMode() {
+        return mode;
     }
 
-    public int getThickness() {
-        return thickness;
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
-    public void setThickness(int thickness) {
-        this.thickness = thickness;
+    public float getThickness() {
+        return properties.getThickness();
     }
 
-    public int getColor() {
-        return color;
+    public void setThickness(float thickness) {
+        properties.setThickness(thickness);
     }
 
-    public void setColor(int color) {
-        this.color = color;
+    public C getColor() {
+        return properties.getColor();
     }
 
-    public int getCapMode() {
-        return capMode;
+    public void setColor(C color) {
+        properties.setColor(color);
     }
 
-    public void setCapMode(int capMode) {
-        this.capMode = capMode;
+    public LineProperties<C> getProperties() {
+        return properties;
     }
 }

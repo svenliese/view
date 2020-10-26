@@ -2,7 +2,6 @@ package de.sl.model;
 
 import de.sl.view.*;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,6 +114,22 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         image.setHPercentage(0.2f);
         image.setMode(Image.FIT_TO_BOX);
         viewList.add(image);
+
+        de.sl.view.Line<C> line = new de.sl.view.Line<>(colorFactory.getWhite(), 2.0f);
+        line.setXPercentage(0.1f);
+        line.setYPercentage(0.1f);
+        line.setWPercentage(0.8f);
+        line.setHPercentage(0.05f);
+        line.setMode(Line.HORIZONTAL);
+        viewList.add(line);
+
+        line = new de.sl.view.Line<>(colorFactory.getWhite(), 2.0f);
+        line.setXPercentage(0.1f);
+        line.setYPercentage(0.1f);
+        line.setWPercentage(0.05f);
+        line.setHPercentage(0.8f);
+        line.setMode(Line.VERTICAL);
+        viewList.add(line);
 
         return viewList;
     }
