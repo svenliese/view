@@ -28,7 +28,14 @@ public class SwingRect extends SwingView {
         final Color bgColor = rect.getColor();
         if(bgColor!=null) {
             g2d.setColor(bgColor);
+
+            AlphaComposite alpha = AlphaComposite.getInstance(
+                AlphaComposite.SRC_OVER, rect.getAlpha()
+            );
+            g2d.setComposite(alpha);
+
             g2d.fillRect((int) x, (int) y, (int) w, (int) h);
+
         }
 
         final LineProperties<Color> border = rect.getBorder();

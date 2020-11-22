@@ -50,6 +50,7 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         rect.setYPercentage(0.2f);
         rect.setWPercentage(0.25f);
         rect.setHPercentage(0.25f);
+        rect.setAlpha(0.75f);
         viewList.add(rect);
 
         SimpleText<C> simpleText = new SimpleText<>("simple text H left", colorFactory.getWhite());
@@ -92,7 +93,12 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         simpleText.setOrientation(SimpleText.VERTICAL);
         viewList.add(simpleText);
 
-        TextButton<C> textButton = new TextButton<>("button", colorFactory.getBlue(), colorFactory.getLightGray(), colorFactory.getBlue());
+        TextButton<C> textButton = new TextButton<>(
+            "button",
+            colorFactory.getBlue(),
+            colorFactory.getLightGray(),
+            new LineProperties<>(colorFactory.getBlue(), 2.0f, false)
+        );
         textButton.setXPercentage(0.4f);
         textButton.setYPercentage(0.05f);
         textButton.setWPercentage(0.1f);
@@ -215,9 +221,9 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
     }
 
     @Override
-    public void touchDown(float xPercent, float yPercent) {
+    public boolean touchDown(float xPercent, float yPercent) {
         for(IView<C> view : views) {
-            if(view.isInside(xPercent, yPercent)) {
+            if(view.isVisible() && view.isInside(xPercent, yPercent)) {
                 activeView = view;
                 setBorderToView();
                 activeViewBorder.setVisible(true);
@@ -226,15 +232,22 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
                     modelListener.clickedOnView(view);
                 }
 
-                return;
+                return true;
             }
         }
-        activeViewBorder.setVisible(false);
-        activeView = null;
 
-        if(modelListener!=null) {
+        boolean changed = false;
+        if(activeView!=null) {
+            activeViewBorder.setVisible(false);
+            activeView = null;
+            changed = true;
+        }
+
+        if (modelListener != null) {
             modelListener.clickedInBackground();
         }
+
+        return changed;
     }
 
     @Override

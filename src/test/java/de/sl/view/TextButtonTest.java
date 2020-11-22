@@ -17,7 +17,11 @@ public class TextButtonTest {
         final String text1 = "1";
         final String text2 = "2";
 
-        final TextButton<Color> testObj = new TextButton<>(text1, Color.WHITE, Color.BLACK, Color.GRAY);
+        final TextButton<Color> testObj = new TextButton<>(
+            text1,
+            Color.WHITE,
+            Color.BLACK
+        );
         Assertions.assertEquals(text1, testObj.getText());
 
         try {
@@ -36,7 +40,11 @@ public class TextButtonTest {
         final Color color1 = Color.BLACK;
         final Color color2 = Color.WHITE;
 
-        final TextButton<Color> testObj = new TextButton<>("test", color1, Color.BLACK, Color.GRAY);
+        final TextButton<Color> testObj = new TextButton<>(
+            "test",
+            color1,
+            Color.BLACK
+        );
         Assertions.assertEquals(color1, testObj.getTextColor());
 
         try {
@@ -55,7 +63,11 @@ public class TextButtonTest {
         final Color color1 = Color.BLACK;
         final Color color2 = Color.WHITE;
 
-        final TextButton<Color> testObj = new TextButton<>("test", Color.WHITE, color1, Color.GRAY);
+        final TextButton<Color> testObj = new TextButton<>(
+            "test",
+            Color.WHITE,
+            color1
+        );
         Assertions.assertEquals(color1, testObj.getBgColor());
 
         try {
@@ -74,7 +86,12 @@ public class TextButtonTest {
         final Color color1 = Color.BLACK;
         final Color color2 = Color.WHITE;
 
-        final TextButton<Color> testObj = new TextButton<>("test", Color.WHITE, Color.BLACK, color1);
+        final TextButton<Color> testObj = new TextButton<>(
+            "test",
+            Color.WHITE,
+            Color.BLACK,
+            new LineProperties<>(color1, 2.0f, false)
+        );
         Assertions.assertEquals(color1, testObj.getBorderColor());
 
         try {
@@ -91,7 +108,11 @@ public class TextButtonTest {
     @Test
     void testHAlign() {
 
-        final TextButton<Color> testObj = new TextButton<>("test", Color.WHITE, Color.BLACK, Color.GRAY);
+        final TextButton<Color> testObj = new TextButton<>(
+            "test",
+            Color.WHITE,
+            Color.BLACK
+        );
         Assertions.assertEquals(SimpleText.CENTER, testObj.getHAlign());
 
         try {
@@ -108,7 +129,11 @@ public class TextButtonTest {
     @Test
     void testOrientation() {
 
-        final TextButton<Color> testObj = new TextButton<>("test", Color.WHITE, Color.BLACK, Color.GRAY);
+        final TextButton<Color> testObj = new TextButton<>(
+            "test",
+            Color.WHITE,
+            Color.BLACK
+        );
         Assertions.assertEquals(SimpleText.HORIZONTAL, testObj.getOrientation());
 
         try {
@@ -125,7 +150,11 @@ public class TextButtonTest {
     @Test
     void testTextSize() {
 
-        final TextButton<Color> testObj = new TextButton<>("test", Color.WHITE, Color.BLACK, Color.GRAY);
+        final TextButton<Color> testObj = new TextButton<>(
+            "test",
+            Color.WHITE,
+            Color.BLACK
+        );
         Assertions.assertEquals(8, testObj.getTextSize());
 
         try {

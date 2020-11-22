@@ -8,10 +8,14 @@ public class TextButton<C> extends SimpleText<C> {
     private C bgColor;
     private final LineProperties<C> border;
 
-    public TextButton(String text, C textColor, C bgColor, C borderColor) {
+    public TextButton(String text, C textColor, C bgColor, LineProperties<C> border) {
         super(text, textColor);
         this.bgColor = bgColor;
-        this.border = new LineProperties<>(borderColor, 2.0f, false);
+        this.border = border;
+    }
+
+    public TextButton(String text, C textColor, C bgColor) {
+        this(text, textColor, bgColor, null);
     }
 
     public C getBgColor() {

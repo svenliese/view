@@ -6,6 +6,7 @@ package de.sl.view;
 public class Rect<C> extends ViewBase<C> {
 
     protected C color;
+    protected float alpha = 1.0f;
     protected LineProperties<C> border;
 
     public Rect(C color, LineProperties<C> border) {
@@ -23,6 +24,14 @@ public class Rect<C> extends ViewBase<C> {
 
     public void setColor(C color) {
         this.color = color;
+    }
+
+    public float getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
     }
 
     public LineProperties<C> getBorder() {

@@ -13,9 +13,13 @@ public interface IViewModel<C, I> {
 
     List<IView<C>> getViews();
 
-    // todo: move to different interface ??
-    void touchDown(float xPercent, float yPercent);
+    /**
+     * @return true - model changed
+     */
+    boolean touchDown(float xPercent, float yPercent);
 
-    // todo: move to different interface ??
+    /**
+     * @return true - model changed
+     */
     boolean simulate(long now);
 }
