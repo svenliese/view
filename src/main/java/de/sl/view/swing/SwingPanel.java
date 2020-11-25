@@ -1,7 +1,7 @@
 package de.sl.view.swing;
 
 import de.sl.view.IView;
-import de.sl.view.IViewModel;
+import de.sl.view.Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,11 +16,11 @@ import java.util.List;
  */
 public class SwingPanel extends JPanel implements MouseListener {
 
-    private final transient IViewModel<Color, BufferedImage> model;
+    private final transient Model<Color, BufferedImage> model;
 
     private transient java.util.List<SwingView> swingObjects;
 
-    public SwingPanel(IViewModel<Color, BufferedImage> model) {
+    public SwingPanel(Model<Color, BufferedImage> model) {
         this.model = model;
 
         initialize();

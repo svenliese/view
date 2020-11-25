@@ -1,39 +1,29 @@
-package de.sl.model;
+package de.sl.view;
 
-import de.sl.view.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author SL
  */
-public class ExampleModel<C, I> implements IViewModel<C, I> {
+public class ExampleModel<C, I> extends Model<C, I> {
 
     private static final float CHANGE_PERCENTAGE = 0.05f;
-
-    private C bgColor;
-
-    private final List<IView<C>> views;
 
     private IView<C> activeView;
 
     private final Rect<C> activeViewBorder;
 
-    private IModelListener<C> modelListener;
-
     public ExampleModel(IColorFactory<C> colorFactory, IImageFactory<I> imageFactory) {
-        this.views = buildViews(colorFactory, imageFactory);
+        buildViews(colorFactory, imageFactory);
 
-        bgColor = colorFactory.getBlack();
+        setBgColor(colorFactory.getBlack());
 
         activeViewBorder = new Rect<>(null, new LineProperties<>(colorFactory.getRed(), 2.0f, false));
         activeViewBorder.setVisible(false);
-        views.add(activeViewBorder);
+        addView(activeViewBorder);
     }
 
-    private List<IView<C>> buildViews(IColorFactory<C> colorFactory, IImageFactory<I> imageFactory) {
-        final List<IView<C>> viewList = new ArrayList<>();
+    private void buildViews(IColorFactory<C> colorFactory, IImageFactory<I> imageFactory) {
 
         Rect<C> rect = new Rect<>(
             colorFactory.getWhite(),
@@ -43,7 +33,7 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         rect.setYPercentage(0.1f);
         rect.setWPercentage(0.25f);
         rect.setHPercentage(0.25f);
-        viewList.add(rect);
+        addView(rect);
 
         rect = new Rect<>(colorFactory.getColor(100, 10, 200));
         rect.setXPercentage(0.2f);
@@ -51,7 +41,7 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         rect.setWPercentage(0.25f);
         rect.setHPercentage(0.25f);
         rect.setAlpha(0.75f);
-        viewList.add(rect);
+        addView(rect);
 
         SimpleText<C> simpleText = new SimpleText<>("simple text H left", colorFactory.getWhite());
         simpleText.setXPercentage(0.2f);
@@ -61,7 +51,7 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         simpleText.setTextSize(12);
         simpleText.setHAlign(SimpleText.LEFT);
         simpleText.setOrientation(SimpleText.HORIZONTAL);
-        viewList.add(simpleText);
+        addView(simpleText);
 
         simpleText = new SimpleText<>("simple text H center", colorFactory.getWhite());
         simpleText.setXPercentage(0.2f);
@@ -71,7 +61,7 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         simpleText.setTextSize(14);
         simpleText.setHAlign(SimpleText.CENTER);
         simpleText.setOrientation(SimpleText.HORIZONTAL);
-        viewList.add(simpleText);
+        addView(simpleText);
 
         simpleText = new SimpleText<>("simple text V left", colorFactory.getWhite());
         simpleText.setXPercentage(0.05f);
@@ -81,7 +71,7 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         simpleText.setTextSize(12);
         simpleText.setHAlign(SimpleText.LEFT);
         simpleText.setOrientation(SimpleText.VERTICAL);
-        viewList.add(simpleText);
+        addView(simpleText);
 
         simpleText = new SimpleText<>("simple text V center", colorFactory.getWhite());
         simpleText.setXPercentage(0.1f);
@@ -91,7 +81,7 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         simpleText.setTextSize(12);
         simpleText.setHAlign(SimpleText.CENTER);
         simpleText.setOrientation(SimpleText.VERTICAL);
-        viewList.add(simpleText);
+        addView(simpleText);
 
         TextButton<C> textButton = new TextButton<>(
             "button",
@@ -104,14 +94,14 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         textButton.setWPercentage(0.1f);
         textButton.setHPercentage(0.05f);
         textButton.setTextSize(16);
-        viewList.add(textButton);
+        addView(textButton);
 
         de.sl.view.Image<C, I> image = new de.sl.view.Image<>(imageFactory.getImage("images/elfe.png"));
         image.setXPercentage(0.6f);
         image.setYPercentage(0.05f);
         image.setWPercentage(0.2f);
         image.setHPercentage(0.2f);
-        viewList.add(image);
+        addView(image);
 
         image = new de.sl.view.Image<>(imageFactory.getImage("images/elfe.png"));
         image.setXPercentage(0.6f);
@@ -119,7 +109,7 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         image.setWPercentage(0.2f);
         image.setHPercentage(0.2f);
         image.setMode(Image.FIT_TO_BOX);
-        viewList.add(image);
+        addView(image);
 
         de.sl.view.Line<C> line = new de.sl.view.Line<>(colorFactory.getWhite(), 2.0f);
         line.setXPercentage(0.1f);
@@ -127,7 +117,7 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         line.setWPercentage(0.8f);
         line.setHPercentage(0.05f);
         line.setMode(Line.HORIZONTAL);
-        viewList.add(line);
+        addView(line);
 
         line = new de.sl.view.Line<>(colorFactory.getWhite(), 2.0f);
         line.setXPercentage(0.1f);
@@ -135,9 +125,7 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         line.setWPercentage(0.05f);
         line.setHPercentage(0.8f);
         line.setMode(Line.VERTICAL);
-        viewList.add(line);
-
-        return viewList;
+        addView(line);
     }
 
     private void setBorderToView() {
@@ -145,10 +133,6 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
         activeViewBorder.setYPercentage(activeView.getYPercentage());
         activeViewBorder.setWPercentage(activeView.getWPercentage());
         activeViewBorder.setHPercentage(activeView.getHPercentage());
-    }
-
-    public void setModelListener(IModelListener<C> modelListener) {
-        this.modelListener = modelListener;
     }
 
     public void greater() {
@@ -206,52 +190,25 @@ public class ExampleModel<C, I> implements IViewModel<C, I> {
     }
 
     @Override
-    public void setBgColor(C bgColor) {
-        this.bgColor = bgColor;
-    }
+    protected boolean handleTouchDown(List<IView<C>> affectedViews) {
+        boolean modified = false;
 
-    @Override
-    public C getBgColor() {
-        return bgColor;
-    }
-
-    @Override
-    public List<IView<C>> getViews() {
-        return views;
-    }
-
-    @Override
-    public boolean touchDown(float xPercent, float yPercent) {
-        for(IView<C> view : views) {
-            if(view.isVisible() && view.isInside(xPercent, yPercent)) {
-                activeView = view;
+        if(affectedViews.isEmpty()) {
+            if(activeView!=null) {
+                activeViewBorder.setVisible(false);
+                activeView = null;
+                modified = true;
+            }
+        } else {
+            final IView<C> newActiveView = affectedViews.get(0);
+            if(newActiveView!=activeView) {
+                activeView = newActiveView;
                 setBorderToView();
                 activeViewBorder.setVisible(true);
-
-                if(modelListener!=null) {
-                    modelListener.clickedOnView(view);
-                }
-
-                return true;
+                modified = true;
             }
         }
 
-        boolean changed = false;
-        if(activeView!=null) {
-            activeViewBorder.setVisible(false);
-            activeView = null;
-            changed = true;
-        }
-
-        if (modelListener != null) {
-            modelListener.clickedInBackground();
-        }
-
-        return changed;
-    }
-
-    @Override
-    public boolean simulate(long now) {
-        return true;
+        return modified;
     }
 }

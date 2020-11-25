@@ -1,7 +1,7 @@
 package de.sl.view.swing;
 
-import de.sl.model.ExampleModel;
-import de.sl.model.IModelListener;
+import de.sl.view.ExampleModel;
+import de.sl.view.IModelListener;
 import de.sl.view.IView;
 
 import javax.swing.*;
@@ -38,7 +38,7 @@ public class Examples extends JFrame implements Runnable, ActionListener, IModel
     private Examples() {
 
         model = new ExampleModel<>(new SwingColorFactory(), new SwingImageFactory());
-        model.setModelListener(this);
+        model.addModelListener(this);
 
         initUI();
     }
@@ -94,12 +94,12 @@ public class Examples extends JFrame implements Runnable, ActionListener, IModel
     }
 
     @Override
-    public void clickedOnView(IView<Color> view) {
+    public void touchedOnViews(java.util.List<IView<Color>> iViews) {
         changeInputState(true);
     }
 
     @Override
-    public void clickedInBackground() {
+    public void touchedInBackground() {
         changeInputState(false);
     }
 
