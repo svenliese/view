@@ -29,8 +29,6 @@ public interface IView<C> {
 
     boolean simulate(long now);
 
-    void setAnimation(Animation<C> animation);
-
     Object getUserObject();
 
     void setUserObject(Object userObject);

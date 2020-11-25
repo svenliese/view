@@ -1,6 +1,5 @@
 package de.sl.view.swing;
 
-import de.sl.view.Animation;
 import de.sl.view.IView;
 import de.sl.view.SimpleText;
 
@@ -79,11 +78,6 @@ public abstract class SwingView implements IView<Color> {
     @Override
     public boolean simulate(long now) {
         return false;
-    }
-
-    @Override
-    public void setAnimation(Animation animation) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

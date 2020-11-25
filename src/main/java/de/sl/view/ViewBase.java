@@ -15,7 +15,6 @@ public abstract class ViewBase<C> implements IView<C> {
     protected float hPercentage;
 
     protected boolean visible = true;
-    protected Animation<C> animation;
 
     protected Object userObject;
 
@@ -31,9 +30,6 @@ public abstract class ViewBase<C> implements IView<C> {
 
     @Override
     public float getXPercentage() {
-        if(animation!=null) {
-            return animation.getXPercentage();
-        }
         return xPercentage;
     }
 
@@ -44,9 +40,6 @@ public abstract class ViewBase<C> implements IView<C> {
 
     @Override
     public float getYPercentage() {
-        if(animation!=null) {
-            return animation.getYPercentage();
-        }
         return yPercentage;
     }
 
@@ -57,9 +50,6 @@ public abstract class ViewBase<C> implements IView<C> {
 
     @Override
     public float getWPercentage() {
-        if(animation!=null) {
-            return animation.getWPercentage();
-        }
         return wPercentage;
     }
 
@@ -70,9 +60,6 @@ public abstract class ViewBase<C> implements IView<C> {
 
     @Override
     public float getHPercentage() {
-        if(animation!=null) {
-            return animation.getHPercentage();
-        }
         return hPercentage;
     }
 
@@ -100,14 +87,6 @@ public abstract class ViewBase<C> implements IView<C> {
 
     @Override
     public boolean simulate(long now) {
-        if(animation!=null) {
-            return animation.simulate(now);
-        }
         return false;
-    }
-
-    @Override
-    public void setAnimation(Animation<C> animation) {
-        this.animation = animation;
     }
 }
