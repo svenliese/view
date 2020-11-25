@@ -24,7 +24,6 @@ ViewBase <|-- Line
 
 SimpleText <|-- TextButton
 
-IView <|-- SwingView
 SwingView <|-- SwingRect
 SwingView <|-- SwingSimpleText
 SwingView <|-- SwingTextButton
