@@ -42,6 +42,11 @@ public class SwingPanel extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent event) {
+        // not needed
+    }
+
+    @Override
+    public void mousePressed(MouseEvent event) {
         model.touchDown(
             (float) event.getX() / (float) getWidth(),
             (float) event.getY() / (float) getHeight()
@@ -49,13 +54,11 @@ public class SwingPanel extends JPanel implements MouseListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-        // not needed
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // not needed
+    public void mouseReleased(MouseEvent event) {
+        model.touchUp(
+            (float) event.getX() / (float) getWidth(),
+            (float) event.getY() / (float) getHeight()
+        );
     }
 
     @Override

@@ -190,7 +190,7 @@ public class ExampleModel<C, I> extends Model<C, I> {
     }
 
     @Override
-    protected boolean handleTouchDown(List<IView<C>> affectedViews) {
+    protected boolean handleClick(List<IView<C>> affectedViews) {
         boolean modified = false;
 
         if(affectedViews.isEmpty()) {
@@ -210,5 +210,13 @@ public class ExampleModel<C, I> extends Model<C, I> {
         }
 
         return modified;
+    }
+
+    @Override
+    protected boolean handleTouchDown(List<IView<C>> affectedViews) {
+        if(affectedViews.size()>1) {
+            return false;
+        }
+        return handleClick(affectedViews);
     }
 }
