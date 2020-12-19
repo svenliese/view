@@ -3,6 +3,7 @@ package de.sl.view.swing;
 import de.sl.view.ExampleModel;
 import de.sl.view.IModelListener;
 import de.sl.view.IView;
+import de.sl.view.Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,7 @@ import java.awt.image.BufferedImage;
 /**
  * @author SL
  */
-public class Examples extends JFrame implements Runnable, ActionListener, IModelListener<Color> {
+public class Examples extends AppBase implements ActionListener, IModelListener<Color> {
 
     private static final String ARROW_LEFT = "\u2190";
     private static final String ARROW_RIGHT = "\u2192";
@@ -21,12 +22,6 @@ public class Examples extends JFrame implements Runnable, ActionListener, IModel
     private static final String ARROW_DOWN = "\u2193";
 
     private transient ExampleModel<Color, BufferedImage> model;
-
-    private SwingPanel board;
-
-    private transient Thread myThread;
-
-    private boolean simulate = true;
 
     private JButton bGreater;
     private JButton bSmaller;
@@ -36,18 +31,18 @@ public class Examples extends JFrame implements Runnable, ActionListener, IModel
     private JButton bDown;
 
     private Examples() {
-
-        model = new ExampleModel<>(new SwingColorFactory(), new SwingImageFactory());
-        model.addModelListener(this);
-
-        initUI();
+        super("examples 1.0");
     }
 
-    private void initUI() {
-        setLayout(new BorderLayout(5, 5));
+    @Override
+    protected Model<Color, BufferedImage> initModel() {
+        model = new ExampleModel<>(new SwingColorFactory(), new SwingImageFactory());
+        model.addModelListener(this);
+        return model;
+    }
 
-        board = new SwingPanel(model);
-        add(board, BorderLayout.CENTER);
+    @Override
+    protected void initUI() {
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         add(buttonPanel, BorderLayout.NORTH);
@@ -75,11 +70,6 @@ public class Examples extends JFrame implements Runnable, ActionListener, IModel
         bDown = new JButton(ARROW_DOWN);
         bDown.addActionListener(this);
         buttonPanel.add(bDown);
-
-        setSize(800, 600);
-        setTitle("examples 1.0");
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
 
         changeInputState(false);
     }
@@ -118,25 +108,6 @@ public class Examples extends JFrame implements Runnable, ActionListener, IModel
         } else if(e.getSource()==bDown) {
             model.moveDown();
         }
-    }
-
-    @Override
-    public void run() {
-        while(simulate) {
-            board.simulate();
-
-            try {
-                myThread.sleep(1000 / 30);
-            } catch(InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
-
-    void start() {
-        myThread = new Thread(this);
-        myThread.setPriority(Thread.MIN_PRIORITY);
-        myThread.start();
     }
 
     public static void main(String[] args) {
