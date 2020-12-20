@@ -17,8 +17,8 @@ public abstract class AppBase extends JFrame implements Runnable {
 
     private boolean simulate = true;
 
-    protected AppBase(String title) {
-        setSize(800, 600);
+    protected AppBase(String title, int width, int height) {
+        setSize(width, height);
         setTitle(title);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

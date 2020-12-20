@@ -31,7 +31,7 @@ public class Examples extends AppBase implements ActionListener, IModelListener<
     private JButton bDown;
 
     private Examples() {
-        super("examples 1.0");
+        super("examples 1.0", 800, 600);
     }
 
     @Override
