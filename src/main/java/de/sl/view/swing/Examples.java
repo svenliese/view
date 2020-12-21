@@ -1,9 +1,8 @@
 package de.sl.view.swing;
 
-import de.sl.view.ExampleModel;
+import de.sl.view.ExampleViewModel;
 import de.sl.view.IModelListener;
 import de.sl.view.IView;
-import de.sl.view.Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +20,7 @@ public class Examples extends AppBase implements ActionListener, IModelListener<
     private static final String ARROW_UP = "\u2191";
     private static final String ARROW_DOWN = "\u2193";
 
-    private transient ExampleModel<Color, BufferedImage> model;
+    private transient ExampleViewModel<Color, BufferedImage> viewModel;
 
     private JButton bGreater;
     private JButton bSmaller;
@@ -30,15 +29,11 @@ public class Examples extends AppBase implements ActionListener, IModelListener<
     private JButton bUp;
     private JButton bDown;
 
-    private Examples() {
-        super("examples 1.0", 800, 600);
-    }
+    private Examples(ExampleViewModel<Color, BufferedImage> viewModel) {
+        super("examples 1.0", 800, 600, viewModel);
 
-    @Override
-    protected Model<Color, BufferedImage> initModel() {
-        model = new ExampleModel<>(new SwingColorFactory(), new SwingImageFactory());
-        model.addModelListener(this);
-        return model;
+        this.viewModel = viewModel;
+        this.viewModel.addModelListener(this);
     }
 
     @Override
@@ -96,23 +91,25 @@ public class Examples extends AppBase implements ActionListener, IModelListener<
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==bGreater) {
-            model.greater();
+            viewModel.greater();
         } else if(e.getSource()==bSmaller) {
-            model.smaller();
+            viewModel.smaller();
         } else if(e.getSource()==bLeft) {
-            model.moveLeft();
+            viewModel.moveLeft();
         } else if(e.getSource()==bRight) {
-            model.moveRight();
+            viewModel.moveRight();
         } else if(e.getSource()==bUp) {
-            model.moveUp();
+            viewModel.moveUp();
         } else if(e.getSource()==bDown) {
-            model.moveDown();
+            viewModel.moveDown();
         }
     }
 
     public static void main(String[] args) {
+        final ExampleViewModel<Color, BufferedImage> viewModel = new ExampleViewModel<>(new SwingColorFactory(), new SwingImageFactory());
+
         EventQueue.invokeLater(() -> {
-            Examples app = new Examples();
+            Examples app = new Examples(viewModel);
             app.setVisible(true);
             app.start();
         });

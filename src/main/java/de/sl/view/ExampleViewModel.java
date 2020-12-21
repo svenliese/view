@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author SL
  */
-public class ExampleModel<C, I> extends Model<C, I> {
+public class ExampleViewModel<C, I> extends ViewModel<C, I> {
 
     private static final float CHANGE_PERCENTAGE = 0.05f;
 
@@ -13,7 +13,7 @@ public class ExampleModel<C, I> extends Model<C, I> {
 
     private final Rect<C> activeViewBorder;
 
-    public ExampleModel(IColorFactory<C> colorFactory, IImageFactory<I> imageFactory) {
+    public ExampleViewModel(IColorFactory<C> colorFactory, IImageFactory<I> imageFactory) {
         buildViews(colorFactory, imageFactory);
 
         setBgColor(colorFactory.getBlack());

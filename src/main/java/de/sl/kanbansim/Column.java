@@ -38,6 +38,14 @@ public class Column {
         return wip;
     }
 
+    public boolean hasChildren() {
+        return !children.isEmpty();
+    }
+
+    public List<Column> getChildren() {
+        return children;
+    }
+
     public int getColumnSum() {
         if(children.isEmpty()) {
             return 1;

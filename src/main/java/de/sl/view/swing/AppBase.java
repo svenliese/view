@@ -1,6 +1,6 @@
 package de.sl.view.swing;
 
-import de.sl.view.Model;
+import de.sl.view.ViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +17,7 @@ public abstract class AppBase extends JFrame implements Runnable {
 
     private boolean simulate = true;
 
-    protected AppBase(String title, int width, int height) {
+    protected AppBase(String title, int width, int height, ViewModel<Color, BufferedImage> viewModel) {
         setSize(width, height);
         setTitle(title);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -25,13 +25,11 @@ public abstract class AppBase extends JFrame implements Runnable {
 
         setLayout(new BorderLayout(5, 5));
 
-        board = new SwingPanel(initModel());
+        board = new SwingPanel(viewModel);
         add(board, BorderLayout.CENTER);
 
         initUI();
     }
-
-    protected abstract Model<Color, BufferedImage> initModel();
 
     protected abstract void initUI();
 

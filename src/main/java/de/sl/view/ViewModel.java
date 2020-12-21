@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @author SL
  */
-public abstract class Model<C, I> {
+public abstract class ViewModel<C, I> {
 
     private final List<IView<C>> views = new ArrayList<>();
 
