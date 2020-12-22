@@ -70,11 +70,22 @@ public class KanbanModel {
 
     private final List<Column> columns = new ArrayList<>();
 
+    private long lastNewCard = 0;
+
     public void addColumn(Column column) {
         columns.add(column);
     }
 
     public List<Column> getColumns() {
         return columns;
+    }
+
+    public boolean simulate(long elapsedHours) {
+        if(elapsedHours>lastNewCard) {
+            lastNewCard = elapsedHours;
+            columns.get(0).addTicket();
+            return true;
+        }
+        return false;
     }
 }

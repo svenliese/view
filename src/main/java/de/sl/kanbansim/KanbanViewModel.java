@@ -16,6 +16,7 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
     private final Map<Integer, SimpleText<C>> cardInfoMap = new HashMap<>();
 
     public KanbanViewModel(IColorFactory<C> colorFactory, KanbanCompareModel model, ViewBounds viewBounds) {
+        super(model);
         this.model = model;
 
         final float ySpace = 0.01f;

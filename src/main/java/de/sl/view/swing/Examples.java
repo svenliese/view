@@ -1,7 +1,7 @@
 package de.sl.view.swing;
 
 import de.sl.view.ExampleViewModel;
-import de.sl.view.IModelListener;
+import de.sl.view.IViewModelListener;
 import de.sl.view.IView;
 
 import javax.swing.*;
@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 /**
  * @author SL
  */
-public class Examples extends AppBase implements ActionListener, IModelListener<Color> {
+public class Examples extends AppBase implements ActionListener, IViewModelListener<Color> {
 
     private static final String ARROW_LEFT = "\u2190";
     private static final String ARROW_RIGHT = "\u2192";
@@ -33,7 +33,7 @@ public class Examples extends AppBase implements ActionListener, IModelListener<
         super("examples 1.0", 800, 600, viewModel);
 
         this.viewModel = viewModel;
-        this.viewModel.addModelListener(this);
+        this.viewModel.addViewModelListener(this);
     }
 
     @Override

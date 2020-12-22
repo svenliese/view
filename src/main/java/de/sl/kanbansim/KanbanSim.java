@@ -29,6 +29,8 @@ public class KanbanSim extends AppBase {
 
         final KanbanViewModel<Color, BufferedImage> viewModel = new KanbanViewModel<>(new SwingColorFactory(), compareModel, new ViewBounds(0.025f, 0.025f, 0.95f, 0.95f));
 
+        compareModel.start();
+
         EventQueue.invokeLater(() -> {
             KanbanSim app = new KanbanSim(viewModel);
             app.setVisible(true);

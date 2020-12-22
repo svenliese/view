@@ -20,6 +20,8 @@ public class SwingPanel extends JPanel implements MouseListener {
 
     private transient java.util.List<SwingView> swingObjects;
 
+    private long lastChangeCount = -1;
+
     public SwingPanel(ViewModel<Color, BufferedImage> model) {
         this.model = model;
 
@@ -87,8 +89,10 @@ public class SwingPanel extends JPanel implements MouseListener {
         }
     }
 
-    public void simulate() {
-        if (model.simulate(System.currentTimeMillis())) {
+    public void refresh() {
+        final long currentChangeCount = model.getChangeCount();
+        if(currentChangeCount!=lastChangeCount) {
+            lastChangeCount = currentChangeCount;
             repaint();
         }
     }

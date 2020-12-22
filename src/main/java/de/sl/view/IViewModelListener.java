@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author SL
  */
-public interface IModelListener<C> {
+public interface IViewModelListener<C> {
 
     void touchedOnViews(List<IView<C>> views);
 

@@ -1,22 +1,33 @@
 package de.sl.view;
 
+import de.sl.model.IModelListener;
+import de.sl.model.ModelBase;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author SL
  */
-public abstract class ViewModel<C, I> {
+public abstract class ViewModel<C, I> implements IModelListener {
 
     private final List<IView<C>> views = new ArrayList<>();
 
-    private final List<IModelListener<C>> listeners = new ArrayList<>();
+    private final List<IViewModelListener<C>> listeners = new ArrayList<>();
 
     private C bgColor;
 
     private long lastTouchDown = -1;
 
     private long clickThreshold = 500;
+
+    private long changeCount = 0;
+
+    protected ViewModel(ModelBase model) {
+        if(model!=null) {
+            model.addListener(this);
+        }
+    }
 
     public long getClickThreshold() {
         return clickThreshold;
@@ -42,7 +53,7 @@ public abstract class ViewModel<C, I> {
         return views;
     }
 
-    public void addModelListener(IModelListener<C> listener) {
+    public void addViewModelListener(IViewModelListener<C> listener) {
         listeners.add(listener);
     }
 
@@ -76,24 +87,30 @@ public abstract class ViewModel<C, I> {
 
         if(modified) {
             if (affectedViews.isEmpty()) {
-                for (IModelListener<C> listener : listeners) {
+                for (IViewModelListener<C> listener : listeners) {
                     listener.touchedInBackground();
                 }
             } else {
-                for (IModelListener<C> listener : listeners) {
+                for (IViewModelListener<C> listener : listeners) {
                     listener.touchedOnViews(views);
                 }
             }
+            changeCount++;
         }
 
         return modified;
     }
 
+    @Override
+    public void handleModelUpdate() {
+        changeCount++;
+    }
+
     /**
      * @return true - model changed
      */
-    public final boolean simulate(long now) {
-        return true;
+    public final long getChangeCount() {
+        return changeCount;
     }
 
     protected abstract boolean handleClick(List<IView<C>> affectedViews);

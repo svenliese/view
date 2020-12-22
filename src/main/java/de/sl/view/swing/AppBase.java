@@ -15,7 +15,7 @@ public abstract class AppBase extends JFrame implements Runnable {
 
     private transient Thread myThread;
 
-    private boolean simulate = true;
+    private boolean active = true;
 
     protected AppBase(String title, int width, int height, ViewModel<Color, BufferedImage> viewModel) {
         setSize(width, height);
@@ -35,8 +35,8 @@ public abstract class AppBase extends JFrame implements Runnable {
 
     @Override
     public void run() {
-        while(simulate) {
-            board.simulate();
+        while(active) {
+            board.refresh();
 
             try {
                 myThread.sleep(1000 / 30);

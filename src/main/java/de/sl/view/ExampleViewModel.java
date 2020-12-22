@@ -14,6 +14,7 @@ public class ExampleViewModel<C, I> extends ViewModel<C, I> {
     private final Rect<C> activeViewBorder;
 
     public ExampleViewModel(IColorFactory<C> colorFactory, IImageFactory<I> imageFactory) {
+        super(null);
         buildViews(colorFactory, imageFactory);
 
         setBgColor(colorFactory.getBlack());
@@ -133,6 +134,7 @@ public class ExampleViewModel<C, I> extends ViewModel<C, I> {
         activeViewBorder.setYPercentage(activeView.getYPercentage());
         activeViewBorder.setWPercentage(activeView.getWPercentage());
         activeViewBorder.setHPercentage(activeView.getHPercentage());
+        handleModelUpdate();
     }
 
     public void greater() {
