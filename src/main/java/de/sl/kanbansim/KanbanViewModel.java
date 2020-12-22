@@ -11,8 +11,6 @@ import java.util.Map;
  */
 public class KanbanViewModel<C, I> extends ViewModel<C, I> {
 
-    private final float xSpace = 0.005f;
-
     private final KanbanCompareModel model;
 
     private final Map<Integer, SimpleText<C>> cardInfoMap = new HashMap<>();
@@ -73,6 +71,7 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
         final float ySpace = 0.01f;
 
         float y = viewBounds.getY()+ySpace;
+        float childHeight = viewBounds.getH() - ySpace;
 
         //
         // column border
@@ -86,7 +85,7 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
                 false
             )
         );
-        rect.setXPercentage(viewBounds.getX() + xSpace);
+        rect.setXPercentage(viewBounds.getX());
         rect.setYPercentage(viewBounds.getY());
         rect.setWPercentage(viewBounds.getW());
         rect.setHPercentage(viewBounds.getH());
@@ -104,6 +103,7 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
         wipView.setTextSize(18);
         addView(wipView);
         y += textHeight + ySpace;
+        childHeight -= textHeight + ySpace;
 
         //
         // column name
@@ -117,6 +117,7 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
         nameView.setTextSize(18);
         addView(nameView);
         y += textHeight + ySpace;
+        childHeight -= textHeight + ySpace;
 
         //
         // card info
@@ -131,6 +132,7 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
         addView(cardInfoView);
         cardInfoMap.put(column.getId(), cardInfoView);
         y += textHeight + ySpace;
+        childHeight -= textHeight + ySpace;
 
         //
         // child columns
@@ -138,10 +140,10 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
 
         if(column.hasChildren()) {
             final ViewBounds childBounds = new ViewBounds(
-                viewBounds.getX() + xSpace,
+                viewBounds.getX(),
                 y,
-                viewBounds.getW() - 2*xSpace,
-                viewBounds.getH() - y
+                viewBounds.getW(),
+                childHeight
             );
             initColumns(colorFactory, column.getChildren(), childBounds);
         }
