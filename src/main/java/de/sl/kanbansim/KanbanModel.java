@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class KanbanModel {
 
-    public static KanbanModel getIgusBoard() {
+    public static KanbanModel getWipBoard() {
         final KanbanModel model = new KanbanModel();
 
         model.addColumn(new Column("ideas", 3));
@@ -32,6 +32,38 @@ public class KanbanModel {
         model.addColumn(implementation);
 
         model.addColumn(new Column("review", 1));
+
+        model.addColumn(new Column("done", 0));
+
+        return model;
+    }
+
+    public static KanbanModel getOpenBoard() {
+        final KanbanModel model = new KanbanModel();
+
+        model.addColumn(new Column("ideas", 0));
+
+        final Column discovery = new Column("discovery", 0);
+        discovery.addChild(new Column("analysis", 0));
+        discovery.addChild(new Column("concept", 0));
+        discovery.addChild(new Column("ready", 0));
+        model.addColumn(discovery);
+
+        final Column dos = new Column("DOS", 0);
+        dos.addChild(new Column("doing", 0));
+        dos.addChild(new Column("ready", 0));
+        model.addColumn(dos);
+
+        final Column implementation = new Column("implementation", 0);
+        implementation.addChild(new Column("prepare", 0));
+        implementation.addChild(new Column("work", 0));
+        implementation.addChild(new Column("deploy", 0));
+        implementation.addChild(new Column("ready", 0));
+        model.addColumn(implementation);
+
+        model.addColumn(new Column("review", 0));
+
+        model.addColumn(new Column("done", 0));
 
         return model;
     }

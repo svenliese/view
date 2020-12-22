@@ -8,7 +8,11 @@ import java.util.List;
  */
 public class Column {
 
+    private static int nextId = 0;
+
     private final Column parent;
+
+    private final Integer id;
 
     private final String name;
 
@@ -16,10 +20,15 @@ public class Column {
 
     private final List<Column> children = new ArrayList<>();
 
+    private int ticketCount;
+
     public Column(Column parent, String name, int wip) {
         this.parent = parent;
+        this.id = Integer.valueOf(++nextId);
         this.name = name;
         this.wip = wip;
+
+        this.ticketCount = 0;
     }
 
     public Column(String name, int wip) {
@@ -28,6 +37,10 @@ public class Column {
 
     public void addChild(Column child) {
         children.add(child);
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
@@ -53,6 +66,25 @@ public class Column {
         int sum = 0;
         for(Column column : children) {
             sum += column.getColumnSum();
+        }
+        return sum;
+    }
+
+    public void addTicket() {
+        ticketCount++;
+    }
+
+    public void removeTicket() {
+        ticketCount--;
+    }
+
+    public int getTicketCount() {
+        if(children.isEmpty()) {
+            return ticketCount;
+        }
+        int sum = 0;
+        for(Column child : children) {
+            sum += child.getTicketCount();
         }
         return sum;
     }

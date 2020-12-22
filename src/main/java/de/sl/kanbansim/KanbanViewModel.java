@@ -2,7 +2,9 @@ package de.sl.kanbansim;
 
 import de.sl.view.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author SL
@@ -11,12 +13,37 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
 
     private final float xSpace = 0.005f;
 
-    private final KanbanModel model;
+    private final KanbanCompareModel model;
 
-    public KanbanViewModel(IColorFactory<C> colorFactory, KanbanModel model, ViewBounds viewBounds) {
+    private final Map<Integer, SimpleText<C>> cardInfoMap = new HashMap<>();
+
+    public KanbanViewModel(IColorFactory<C> colorFactory, KanbanCompareModel model, ViewBounds viewBounds) {
         this.model = model;
 
-        initColumns(colorFactory, model.getColumns(), viewBounds);
+        final float ySpace = 0.01f;
+        final float height = viewBounds.getH() / 2 - ySpace;
+
+        initColumns(
+            colorFactory,
+            model.getModel1().getColumns(),
+            new ViewBounds(
+                viewBounds.getX(),
+                viewBounds.getY(),
+                viewBounds.getW(),
+                height
+            )
+        );
+
+        initColumns(
+            colorFactory,
+            model.getModel2().getColumns(),
+            new ViewBounds(
+                viewBounds.getX(),
+                viewBounds.getY() + height + ySpace,
+                viewBounds.getW(),
+                height
+            )
+        );
     }
 
     private void initColumns(IColorFactory<C> colorFactory, List<Column> myColumns, ViewBounds viewBounds) {
@@ -43,7 +70,7 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
     private void initColumn(IColorFactory<C> colorFactory, Column column, ViewBounds viewBounds) {
 
         final float textHeight = 0.025f;
-        final float ySpace = 0.025f;
+        final float ySpace = 0.01f;
 
         float y = viewBounds.getY()+ySpace;
 
@@ -89,6 +116,20 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
         nameView.setHPercentage(textHeight);
         nameView.setTextSize(18);
         addView(nameView);
+        y += textHeight + ySpace;
+
+        //
+        // card info
+        //
+
+        final SimpleText<C> cardInfoView = new SimpleText<>("cards "+column.getTicketCount(), colorFactory.getWhite());
+        cardInfoView.setXPercentage(viewBounds.getX() + 0.01f);
+        cardInfoView.setYPercentage(y);
+        cardInfoView.setWPercentage(viewBounds.getW() - 0.02f);
+        cardInfoView.setHPercentage(textHeight);
+        cardInfoView.setTextSize(18);
+        addView(cardInfoView);
+        cardInfoMap.put(column.getId(), cardInfoView);
         y += textHeight + ySpace;
 
         //

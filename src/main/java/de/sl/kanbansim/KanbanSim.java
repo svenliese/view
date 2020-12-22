@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
  */
 public class KanbanSim extends AppBase {
 
-    public KanbanSim(KanbanViewModel viewModel) {
+    public KanbanSim(KanbanViewModel<Color, BufferedImage> viewModel) {
         super("kanban simulation 1.0", 1200, 800, viewModel);
     }
 
@@ -23,8 +23,11 @@ public class KanbanSim extends AppBase {
 
     public static void main(String[] args) {
 
-        final KanbanModel model = KanbanModel.getIgusBoard();
-        final KanbanViewModel<Color, BufferedImage> viewModel = new KanbanViewModel<>(new SwingColorFactory(), model, new ViewBounds(0.05f, 0.05f, 0.9f, 0.9f));
+        final KanbanModel model1 = KanbanModel.getWipBoard();
+        final KanbanModel model2 = KanbanModel.getOpenBoard();
+        final KanbanCompareModel compareModel = new KanbanCompareModel(model1, model2);
+
+        final KanbanViewModel<Color, BufferedImage> viewModel = new KanbanViewModel<>(new SwingColorFactory(), compareModel, new ViewBounds(0.025f, 0.025f, 0.95f, 0.95f));
 
         EventQueue.invokeLater(() -> {
             KanbanSim app = new KanbanSim(viewModel);
