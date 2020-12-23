@@ -10,8 +10,10 @@ public class KanbanCompareModel extends ModelBase {
     private final KanbanModel model1;
     private final KanbanModel model2;
 
+    private long elapsedDays = 0;
+
     public KanbanCompareModel(KanbanModel model1, KanbanModel model2) {
-        super(3600.0d);
+        super(7200.0d);
         this.model1 = model1;
         this.model2 = model2;
     }
@@ -24,9 +26,19 @@ public class KanbanCompareModel extends ModelBase {
         return model2;
     }
 
+    public String getTimeInfoText() {
+        return "Tage: "+elapsedDays;
+    }
+
     @Override
     protected void simulate(long elapsedMillis) {
         model1.simulate(elapsedMillis/(60*60*1000), this);
         model2.simulate(elapsedMillis/(60*60*1000), this);
+
+        long newElapsedDays =elapsedMillis/(24*60*60*1000);
+        if(newElapsedDays>elapsedDays) {
+            elapsedDays = newElapsedDays;
+            informListeners(this);
+        }
     }
 }

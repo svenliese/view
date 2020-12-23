@@ -11,35 +11,58 @@ import java.util.Map;
  */
 public class KanbanViewModel<C, I> extends ViewModel<C, I> {
 
+    private final KanbanCompareModel model;
+
     private final Map<Integer, SimpleText<C>> cardInfoMap = new HashMap<>();
+
+    private final SimpleText<C> timeInfo;
+
+    final float textHeight = 0.025f;
+    final float ySpace = 0.015f;
 
     public KanbanViewModel(IColorFactory<C> colorFactory, KanbanCompareModel model, ViewBounds viewBounds) {
         super(model);
+        this.model = model;
 
-        final float ySpace = 0.01f;
-        final float height = viewBounds.getH() / 2 - ySpace;
+        final float height = viewBounds.getH() / 2 - 2*ySpace - textHeight;
+
+        float y = viewBounds.getY();
 
         initColumns(
             colorFactory,
             model.getModel1().getColumns(),
             new ViewBounds(
                 viewBounds.getX(),
-                viewBounds.getY(),
+                y,
                 viewBounds.getW(),
                 height
             )
         );
+        y += height;
+        y += ySpace;
+
+        timeInfo = new SimpleText<>(model.getTimeInfoText(), colorFactory.getWhite());
+        timeInfo.setXPercentage(viewBounds.getX() + 0.01f);
+        timeInfo.setYPercentage(y);
+        timeInfo.setWPercentage(viewBounds.getW() - 0.02f);
+        timeInfo.setHPercentage(textHeight);
+        timeInfo.setTextSize(18);
+        timeInfo.setHAlign(SimpleText.LEFT);
+        addView(timeInfo);
+        y += ySpace;
+        y += textHeight;
 
         initColumns(
             colorFactory,
             model.getModel2().getColumns(),
             new ViewBounds(
                 viewBounds.getX(),
-                viewBounds.getY() + height + ySpace,
+                y,
                 viewBounds.getW(),
                 height
             )
         );
+
     }
 
     private void initColumns(IColorFactory<C> colorFactory, List<Column> myColumns, ViewBounds viewBounds) {
@@ -64,9 +87,6 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
     }
 
     private void initColumn(IColorFactory<C> colorFactory, Column column, ViewBounds viewBounds) {
-
-        final float textHeight = 0.025f;
-        final float ySpace = 0.01f;
 
         float y = viewBounds.getY()+ySpace;
         float childHeight = viewBounds.getH() - ySpace;
@@ -166,6 +186,8 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
             final Column column = (Column) modelObject;
             final SimpleText<C> cardInfoView = cardInfoMap.get(column.getId());
             cardInfoView.setText(getCardInfoText(column));
+        } else if(modelObject == model) {
+            timeInfo.setText(model.getTimeInfoText());
         } else {
             throw new IllegalStateException("unexpected model object "+modelObject.getClass());
         }
