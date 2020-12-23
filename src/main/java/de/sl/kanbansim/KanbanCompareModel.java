@@ -24,7 +24,7 @@ public class KanbanCompareModel extends ModelBase {
         this.config = config;
 
         for(int i=0; i<config.getCardCount(); i++) {
-            final Card card = new Card();
+            final Card card = new Card(Long.valueOf(config.getDefaultTime()));
             model1.addCard(card);
             model2.addCard(card);
         }

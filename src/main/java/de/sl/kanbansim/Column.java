@@ -21,7 +21,7 @@ public class Column {
 
     private final List<Column> children = new ArrayList<>();
 
-    private Map<Card, Long> cards = new HashMap<>();
+    private final Map<Card, Long> cards = new HashMap<>();
 
     public Column(Column parent, String name, Integer typeId, int wip) {
         this.parent = parent;
@@ -59,6 +59,22 @@ public class Column {
         return children;
     }
 
+    public List<Column> getAllChildren() {
+        final List<Column> result = new ArrayList<>();
+        if(children.isEmpty()) {
+            result.add(this);
+        } else {
+            for (Column column : children) {
+                result.addAll(column.getAllChildren());
+            }
+        }
+        return result;
+    }
+
+    public Column getParent() {
+        return parent;
+    }
+
     public int getColumnSum() {
         if(children.isEmpty()) {
             return 1;
@@ -70,8 +86,8 @@ public class Column {
         return sum;
     }
 
-    public boolean isFree() {
-        return wip==0 || cards.size()<wip;
+    public boolean canPull() {
+        return wip==0 || cards.size() < wip;
     }
 
     public void addTicket(Card card, long elapsedHours) {
@@ -84,6 +100,18 @@ public class Column {
 
     public int getTicketCount() {
         return cards.size();
+    }
+
+    public int getAllTicketCount() {
+        int sum = 0;
+        if(children.isEmpty()) {
+            sum += cards.size();
+        } else {
+            for (Column column : children) {
+                sum += column.getAllTicketCount();
+            }
+        }
+        return sum;
     }
 
     public Card getCardToPull(long elapsedHours) {

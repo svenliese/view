@@ -13,11 +13,17 @@ public class KanbanConfig {
 
     private final int activeCardCount = 6;
 
+    private final long defaultTime = 1;
+
     public int getCardCount() {
         return cardCount;
     }
 
     public int getActiveCardCount() {
         return activeCardCount;
+    }
+
+    public long getDefaultTime() {
+        return defaultTime;
     }
 }

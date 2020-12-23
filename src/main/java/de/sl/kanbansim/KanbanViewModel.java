@@ -141,16 +141,18 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
         // card info
         //
 
-        final SimpleText<C> cardInfoView = new SimpleText<>(getCardInfoText(column), colorFactory.getWhite());
-        cardInfoView.setXPercentage(viewBounds.getX() + 0.01f);
-        cardInfoView.setYPercentage(y);
-        cardInfoView.setWPercentage(viewBounds.getW() - 0.02f);
-        cardInfoView.setHPercentage(textHeight);
-        cardInfoView.setTextSize(18);
-        addView(cardInfoView);
-        cardInfoMap.put(column.getId(), cardInfoView);
-        y += textHeight + ySpace;
-        childHeight -= textHeight + ySpace;
+        if(column.getColumnSum()==1) {
+            final SimpleText<C> cardInfoView = new SimpleText<>(getCardInfoText(column), colorFactory.getWhite());
+            cardInfoView.setXPercentage(viewBounds.getX() + 0.01f);
+            cardInfoView.setYPercentage(y);
+            cardInfoView.setWPercentage(viewBounds.getW() - 0.02f);
+            cardInfoView.setHPercentage(textHeight);
+            cardInfoView.setTextSize(18);
+            addView(cardInfoView);
+            cardInfoMap.put(column.getId(), cardInfoView);
+            y += textHeight + ySpace;
+            childHeight -= textHeight + ySpace;
+        }
 
         //
         // child columns
