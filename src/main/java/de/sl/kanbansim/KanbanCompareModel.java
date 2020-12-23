@@ -2,15 +2,10 @@ package de.sl.kanbansim;
 
 import de.sl.model.ModelBase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author SL
  */
 public class KanbanCompareModel extends ModelBase {
-
-    private final KanbanConfig config;
 
     private final KanbanModel model1;
     private final KanbanModel model2;
@@ -18,13 +13,18 @@ public class KanbanCompareModel extends ModelBase {
     private long elapsedDays = 0;
 
     public KanbanCompareModel(KanbanModel model1, KanbanModel model2, KanbanConfig config) {
-        super(7200.0d);
+        super(14400.0d);
         this.model1 = model1;
         this.model2 = model2;
-        this.config = config;
 
         for(int i=0; i<config.getCardCount(); i++) {
-            final Card card = new Card(Long.valueOf(config.getDefaultTime()));
+            final Card card = new Card(Long.valueOf(config.getDefaultHours()));
+            card.addTime(KanbanModel.TYPE_ANALYSIS, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_ANALYSIS)));
+            card.addTime(KanbanModel.TYPE_CONCEPT, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_CONCEPT)));
+            card.addTime(KanbanModel.TYPE_PREPARE, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_PREPARE)));
+            card.addTime(KanbanModel.TYPE_WORK, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_WORK)));
+            card.addTime(KanbanModel.TYPE_DEPLOY, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_DEPLOY)));
+            card.addTime(KanbanModel.TYPE_READY_REVIEW, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_READY_REVIEW)));
             model1.addCard(card);
             model2.addCard(card);
         }

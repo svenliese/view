@@ -16,11 +16,11 @@ public class Card {
         this.defaultTime = defaultTime;
     }
 
-    public void addTime(Integer type, Long millis) {
-        timeByType.put(type, millis);
+    public void addTime(Integer type, Long hours) {
+        timeByType.put(type, hours);
     }
 
-    public Long getTime(Integer type) {
+    public Long getHours(Integer type) {
         Long result = timeByType.get(type);
         if(result==null) {
             result = defaultTime;

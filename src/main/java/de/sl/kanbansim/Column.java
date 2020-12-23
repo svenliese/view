@@ -117,7 +117,7 @@ public class Column {
     public Card getCardToPull(long elapsedHours) {
         for(Map.Entry<Card, Long> e : cards.entrySet()) {
             final Card card = e.getKey();
-            final Long time = card.getTime(typeId);
+            final Long time = card.getHours(typeId);
             if(time==null || time.longValue() < elapsedHours - e.getValue().longValue()) {
                 return card;
             }

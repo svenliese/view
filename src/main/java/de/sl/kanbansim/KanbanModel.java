@@ -12,14 +12,21 @@ import java.util.Queue;
  */
 public class KanbanModel {
 
+    public static final Integer TYPE_ANALYSIS = Integer.valueOf(3);
+    public static final Integer TYPE_CONCEPT = Integer.valueOf(4);
+    public static final Integer TYPE_PREPARE = Integer.valueOf(10);
+    public static final Integer TYPE_WORK = Integer.valueOf(11);
+    public static final Integer TYPE_DEPLOY = Integer.valueOf(12);
+    public static final Integer TYPE_READY_REVIEW = Integer.valueOf(13);
+
     public static KanbanModel getWipBoard(KanbanConfig config) {
         final KanbanModel model = new KanbanModel(config);
 
         model.addColumn(new Column("ideas", Integer.valueOf(1), 3));
 
         final Column discovery = new Column("discovery", Integer.valueOf(2), 3);
-        discovery.addChild(new Column(discovery, "analysis", Integer.valueOf(3), 0));
-        discovery.addChild(new Column(discovery, "concept", Integer.valueOf(4), 0));
+        discovery.addChild(new Column(discovery, "analysis", TYPE_ANALYSIS, 0));
+        discovery.addChild(new Column(discovery, "concept", TYPE_CONCEPT, 0));
         discovery.addChild(new Column(discovery, "ready", Integer.valueOf(5), 0));
         model.addColumn(discovery);
 
@@ -29,10 +36,10 @@ public class KanbanModel {
         model.addColumn(dos);
 
         final Column implementation = new Column("implementation", Integer.valueOf(9), 3);
-        implementation.addChild(new Column(implementation, "prepare", Integer.valueOf(10), 0));
-        implementation.addChild(new Column(implementation, "work", Integer.valueOf(11), 0));
-        implementation.addChild(new Column(implementation, "deploy", Integer.valueOf(12), 0));
-        implementation.addChild(new Column(implementation, "ready", Integer.valueOf(13), 0));
+        implementation.addChild(new Column(implementation, "prepare", TYPE_PREPARE, 0));
+        implementation.addChild(new Column(implementation, "work", TYPE_WORK, 0));
+        implementation.addChild(new Column(implementation, "deploy", TYPE_DEPLOY, 0));
+        implementation.addChild(new Column(implementation, "ready", TYPE_READY_REVIEW, 0));
         model.addColumn(implementation);
 
         model.addColumn(new Column("review", Integer.valueOf(14), 1));
@@ -48,8 +55,8 @@ public class KanbanModel {
         model.addColumn(new Column("ideas", Integer.valueOf(1), 3));
 
         final Column discovery = new Column("discovery", Integer.valueOf(2), 0);
-        discovery.addChild(new Column(discovery, "analysis", Integer.valueOf(3), 0));
-        discovery.addChild(new Column(discovery, "concept", Integer.valueOf(4), 0));
+        discovery.addChild(new Column(discovery, "analysis", TYPE_ANALYSIS, 0));
+        discovery.addChild(new Column(discovery, "concept", TYPE_CONCEPT, 0));
         discovery.addChild(new Column(discovery, "ready", Integer.valueOf(5), 0));
         model.addColumn(discovery);
 
@@ -59,10 +66,10 @@ public class KanbanModel {
         model.addColumn(dos);
 
         final Column implementation = new Column("implementation", Integer.valueOf(9), 0);
-        implementation.addChild(new Column(implementation, "prepare", Integer.valueOf(10), 0));
-        implementation.addChild(new Column(implementation, "work", Integer.valueOf(11), 0));
-        implementation.addChild(new Column(implementation, "deploy", Integer.valueOf(12), 0));
-        implementation.addChild(new Column(implementation, "ready", Integer.valueOf(13), 0));
+        implementation.addChild(new Column(implementation, "prepare", TYPE_PREPARE, 0));
+        implementation.addChild(new Column(implementation, "work", TYPE_WORK, 0));
+        implementation.addChild(new Column(implementation, "deploy", TYPE_DEPLOY, 0));
+        implementation.addChild(new Column(implementation, "ready", TYPE_READY_REVIEW, 0));
         model.addColumn(implementation);
 
         model.addColumn(new Column("review", Integer.valueOf(14), 1));
@@ -116,6 +123,10 @@ public class KanbanModel {
         //
 
         for(int colIdx=childColumns.size()-1; colIdx>0; colIdx--) {
+            if(colIdx==1 && activeCards>=config.getMaxWorkers()) {
+                continue;
+            }
+
             final Column targetColumn = childColumns.get(colIdx);
             final Column sourceColumn = childColumns.get(colIdx-1);
 

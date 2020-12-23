@@ -7,8 +7,8 @@ import java.util.Random;
  */
 public class Interval {
 
-    private static final long MILLIS_PER_HOUR = 1000*60*60;
-    private static final long MILLIS_PER_DAY = 1000*60*60*24;
+    public static final long MILLIS_PER_HOUR = 1000*60*60;
+    public static final long MILLIS_PER_DAY = 1000*60*60*24;
 
     public static Interval getHourInterval(int minHours, int maxHours) {
         return new Interval(minHours*MILLIS_PER_HOUR, maxHours*MILLIS_PER_HOUR);
