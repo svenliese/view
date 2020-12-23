@@ -25,8 +25,8 @@ public class KanbanCompareModel extends ModelBase {
     }
 
     @Override
-    protected boolean simulate(long elapsedMillis) {
-        boolean modified = model1.simulate(elapsedMillis/(60*60*1000));
-        return modified | model2.simulate(elapsedMillis/(60*60*1000));
+    protected void simulate(long elapsedMillis) {
+        model1.simulate(elapsedMillis/(60*60*1000), this);
+        model2.simulate(elapsedMillis/(60*60*1000), this);
     }
 }

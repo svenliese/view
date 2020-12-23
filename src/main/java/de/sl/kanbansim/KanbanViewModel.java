@@ -11,13 +11,10 @@ import java.util.Map;
  */
 public class KanbanViewModel<C, I> extends ViewModel<C, I> {
 
-    private final KanbanCompareModel model;
-
     private final Map<Integer, SimpleText<C>> cardInfoMap = new HashMap<>();
 
     public KanbanViewModel(IColorFactory<C> colorFactory, KanbanCompareModel model, ViewBounds viewBounds) {
         super(model);
-        this.model = model;
 
         final float ySpace = 0.01f;
         final float height = viewBounds.getH() / 2 - ySpace;
@@ -124,7 +121,7 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
         // card info
         //
 
-        final SimpleText<C> cardInfoView = new SimpleText<>("cards "+column.getTicketCount(), colorFactory.getWhite());
+        final SimpleText<C> cardInfoView = new SimpleText<>(getCardInfoText(column), colorFactory.getWhite());
         cardInfoView.setXPercentage(viewBounds.getX() + 0.01f);
         cardInfoView.setYPercentage(y);
         cardInfoView.setWPercentage(viewBounds.getW() - 0.02f);
@@ -150,12 +147,28 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
         }
     }
 
+    private String getCardInfoText(Column column) {
+        return "cards "+column.getTicketCount();
+    }
+
     private int getColumnSum(List<Column> myColumns) {
         int sum = 0;
         for(Column column : myColumns) {
             sum += column.getColumnSum();
         }
         return sum;
+    }
+
+    @Override
+    public void handleModelUpdate(Object modelObject) {
+        super.handleModelUpdate(modelObject);
+        if(modelObject instanceof Column) {
+            final Column column = (Column) modelObject;
+            final SimpleText<C> cardInfoView = cardInfoMap.get(column.getId());
+            cardInfoView.setText(getCardInfoText(column));
+        } else {
+            throw new IllegalStateException("unexpected model object "+modelObject.getClass());
+        }
     }
 
     @Override

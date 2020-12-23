@@ -134,7 +134,7 @@ public class ExampleViewModel<C, I> extends ViewModel<C, I> {
         activeViewBorder.setYPercentage(activeView.getYPercentage());
         activeViewBorder.setWPercentage(activeView.getWPercentage());
         activeViewBorder.setHPercentage(activeView.getHPercentage());
-        handleModelUpdate();
+        handleModelUpdate(null);
     }
 
     public void greater() {

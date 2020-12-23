@@ -102,7 +102,7 @@ public abstract class ViewModel<C, I> implements IModelListener {
     }
 
     @Override
-    public void handleModelUpdate() {
+    public void handleModelUpdate(Object modelObject) {
         changeCount++;
     }
 

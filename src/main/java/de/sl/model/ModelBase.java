@@ -41,11 +41,7 @@ public abstract class ModelBase implements Runnable {
     @Override
     public void run() {
         while(active) {
-            if(simulate( (long)((System.currentTimeMillis()-startMillis)*speed )) ) {
-                for(IModelListener listener : listeners) {
-                    listener.handleModelUpdate();
-                }
-            }
+            simulate( (long)((System.currentTimeMillis()-startMillis)*speed ));
 
             try {
                 myThread.sleep(100);
@@ -55,8 +51,11 @@ public abstract class ModelBase implements Runnable {
         }
     }
 
-    /**
-     * @return true if model changed
-     */
-    abstract protected boolean simulate(long elapsedMillis);
+    public void informListeners(Object modelObject) {
+        for(IModelListener listener : listeners) {
+            listener.handleModelUpdate(modelObject);
+        }
+    }
+
+    abstract protected void simulate(long elapsedMillis);
 }

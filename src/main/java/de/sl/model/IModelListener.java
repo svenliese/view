@@ -5,5 +5,5 @@ package de.sl.model;
  */
 public interface IModelListener {
 
-    void handleModelUpdate();
+    void handleModelUpdate(Object modelObject);
 }

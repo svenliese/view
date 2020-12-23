@@ -1,5 +1,7 @@
 package de.sl.kanbansim;
 
+import de.sl.model.ModelBase;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,12 +82,11 @@ public class KanbanModel {
         return columns;
     }
 
-    public boolean simulate(long elapsedHours) {
+    public void simulate(long elapsedHours, ModelBase modelBase) {
         if(elapsedHours>lastNewCard) {
             lastNewCard = elapsedHours;
             columns.get(0).addTicket();
-            return true;
+            modelBase.informListeners(columns.get(0));
         }
-        return false;
     }
 }
