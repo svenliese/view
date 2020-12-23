@@ -1,7 +1,6 @@
 package de.sl.kanbansim;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author SL
@@ -14,25 +13,26 @@ public class Column {
 
     private final Integer id;
 
+    private final Integer typeId;
+
     private final String name;
 
     private final int wip;
 
     private final List<Column> children = new ArrayList<>();
 
-    private int ticketCount;
+    private Map<Card, Long> cards = new HashMap<>();
 
-    public Column(Column parent, String name, int wip) {
+    public Column(Column parent, String name, Integer typeId, int wip) {
         this.parent = parent;
         this.id = Integer.valueOf(++nextId);
         this.name = name;
+        this.typeId = typeId;
         this.wip = wip;
-
-        this.ticketCount = 0;
     }
 
-    public Column(String name, int wip) {
-        this(null, name, wip);
+    public Column(String name, Integer typeId, int wip) {
+        this(null, name, typeId, wip);
     }
 
     public void addChild(Column child) {
@@ -70,22 +70,30 @@ public class Column {
         return sum;
     }
 
-    public void addTicket() {
-        ticketCount++;
+    public boolean isFree() {
+        return wip==0 || cards.size()<wip;
     }
 
-    public void removeTicket() {
-        ticketCount--;
+    public void addTicket(Card card, long elapsedHours) {
+        cards.put(card, Long.valueOf(elapsedHours));
+    }
+
+    public void removeTicket(Card card) {
+        cards.remove(card);
     }
 
     public int getTicketCount() {
-        if(children.isEmpty()) {
-            return ticketCount;
+        return cards.size();
+    }
+
+    public Card getCardToPull(long elapsedHours) {
+        for(Map.Entry<Card, Long> e : cards.entrySet()) {
+            final Card card = e.getKey();
+            final Long time = card.getTime(typeId);
+            if(time==null || time.longValue() < elapsedHours - e.getValue().longValue()) {
+                return card;
+            }
         }
-        int sum = 0;
-        for(Column child : children) {
-            sum += child.getTicketCount();
-        }
-        return sum;
+        return null;
     }
 }

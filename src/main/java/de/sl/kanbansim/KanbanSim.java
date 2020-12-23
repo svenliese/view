@@ -23,9 +23,10 @@ public class KanbanSim extends AppBase {
 
     public static void main(String[] args) {
 
-        final KanbanModel model1 = KanbanModel.getWipBoard();
-        final KanbanModel model2 = KanbanModel.getOpenBoard();
-        final KanbanCompareModel compareModel = new KanbanCompareModel(model1, model2);
+        final KanbanConfig config = new KanbanConfig();
+        final KanbanModel model1 = KanbanModel.getWipBoard(config);
+        final KanbanModel model2 = KanbanModel.getOpenBoard(config);
+        final KanbanCompareModel compareModel = new KanbanCompareModel(model1, model2, config);
 
         final KanbanViewModel<Color, BufferedImage> viewModel = new KanbanViewModel<>(new SwingColorFactory(), compareModel, new ViewBounds(0.025f, 0.025f, 0.95f, 0.95f));
 
