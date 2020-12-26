@@ -19,6 +19,8 @@ public class KanbanConfig {
 
     private final long defaultTime;
 
+    private final double speed = 14400.0d;
+
     private final Map<Integer, Interval> timesByType = new TreeMap<>();
 
     public KanbanConfig(int cardCount, int maxWorkers, int defaultHours) {
@@ -49,5 +51,9 @@ public class KanbanConfig {
             return defaultTime;
         }
         return interval.getRandom(random) / Interval.MILLIS_PER_HOUR;
+    }
+
+    public double getSpeed() {
+        return speed;
     }
 }

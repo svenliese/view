@@ -10,7 +10,7 @@ import java.util.Queue;
 /**
  * @author SL
  */
-public class KanbanModel {
+public class KanbanModel extends ModelBase {
 
     public static final Integer TYPE_ANALYSIS = Integer.valueOf(3);
     public static final Integer TYPE_CONCEPT = Integer.valueOf(4);
@@ -90,6 +90,7 @@ public class KanbanModel {
     private int activeCards = 0;
 
     public KanbanModel(KanbanConfig config) {
+        super(config.getSpeed());
         this.config = config;
     }
 
@@ -156,5 +157,10 @@ public class KanbanModel {
                 }
             }
         }
+    }
+
+    @Override
+    protected void simulate(long elapsedMillis) {
+
     }
 }

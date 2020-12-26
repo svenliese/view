@@ -9,60 +9,20 @@ import java.util.Map;
 /**
  * @author SL
  */
-public class KanbanViewModel<C, I> extends ViewModel<C, I> {
+public class KanbanModelView<C, I> extends ViewModel<C, I> {
 
-    private final KanbanCompareModel model;
+    private final KanbanModel model;
 
     private final Map<Integer, SimpleText<C>> cardInfoMap = new HashMap<>();
-
-    private final SimpleText<C> timeInfo;
 
     final float textHeight = 0.025f;
     final float ySpace = 0.015f;
 
-    public KanbanViewModel(IColorFactory<C> colorFactory, KanbanCompareModel model, ViewBounds viewBounds) {
+    public KanbanModelView(IColorFactory<C> colorFactory, KanbanModel model, ViewBounds viewBounds) {
         super(model);
         this.model = model;
 
-        final float height = viewBounds.getH() / 2 - 2*ySpace - textHeight;
-
-        float y = viewBounds.getY();
-
-        initColumns(
-            colorFactory,
-            model.getModel1().getColumns(),
-            new ViewBounds(
-                viewBounds.getX(),
-                y,
-                viewBounds.getW(),
-                height
-            )
-        );
-        y += height;
-        y += ySpace;
-
-        timeInfo = new SimpleText<>(model.getTimeInfoText(), colorFactory.getWhite());
-        timeInfo.setXPercentage(viewBounds.getX() + 0.01f);
-        timeInfo.setYPercentage(y);
-        timeInfo.setWPercentage(viewBounds.getW() - 0.02f);
-        timeInfo.setHPercentage(textHeight);
-        timeInfo.setTextSize(18);
-        timeInfo.setHAlign(SimpleText.LEFT);
-        addView(timeInfo);
-        y += ySpace;
-        y += textHeight;
-
-        initColumns(
-            colorFactory,
-            model.getModel2().getColumns(),
-            new ViewBounds(
-                viewBounds.getX(),
-                y,
-                viewBounds.getW(),
-                height
-            )
-        );
-
+        initColumns(colorFactory, model.getColumns(), viewBounds);
     }
 
     private void initColumns(IColorFactory<C> colorFactory, List<Column> myColumns, ViewBounds viewBounds) {
@@ -181,18 +141,22 @@ public class KanbanViewModel<C, I> extends ViewModel<C, I> {
         return sum;
     }
 
-    @Override
-    public void handleModelUpdate(Object modelObject) {
-        super.handleModelUpdate(modelObject);
+    public void updateViews(Object modelObject) {
         if(modelObject instanceof Column) {
             final Column column = (Column) modelObject;
             final SimpleText<C> cardInfoView = cardInfoMap.get(column.getId());
-            cardInfoView.setText(getCardInfoText(column));
-        } else if(modelObject == model) {
-            timeInfo.setText(model.getTimeInfoText());
+            if(cardInfoView!=null) {
+                cardInfoView.setText(getCardInfoText(column));
+            }
         } else {
             throw new IllegalStateException("unexpected model object "+modelObject.getClass());
         }
+    }
+
+    @Override
+    public void handleModelUpdate(Object modelObject) {
+        super.handleModelUpdate(modelObject);
+        updateViews(modelObject);
     }
 
     @Override

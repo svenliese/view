@@ -4,6 +4,7 @@ import de.sl.model.IModelListener;
 import de.sl.model.ModelBase;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -47,6 +48,10 @@ public abstract class ViewModel<C, I> implements IModelListener {
 
     public void addView(IView<C> view) {
         views.add(view);
+    }
+
+    public void addViews(Collection<IView<C>> viewCollection) {
+        views.addAll(viewCollection);
     }
 
     public List<IView<C>> getViews() {

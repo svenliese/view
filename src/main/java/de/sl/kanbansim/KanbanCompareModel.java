@@ -13,7 +13,7 @@ public class KanbanCompareModel extends ModelBase {
     private long elapsedDays = 0;
 
     public KanbanCompareModel(KanbanModel model1, KanbanModel model2, KanbanConfig config) {
-        super(14400.0d);
+        super(config.getSpeed());
         this.model1 = model1;
         this.model2 = model2;
 

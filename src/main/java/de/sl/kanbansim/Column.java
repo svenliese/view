@@ -21,6 +21,7 @@ public class Column {
 
     private final List<Column> children = new ArrayList<>();
 
+    /** map of card's and their time when entered this column */
     private final Map<Card, Long> cards = new HashMap<>();
 
     public Column(Column parent, String name, Integer typeId, int wip) {
