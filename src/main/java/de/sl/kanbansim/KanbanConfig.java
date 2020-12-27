@@ -19,7 +19,7 @@ public class KanbanConfig {
 
     private final long defaultTime;
 
-    private final double speed = 14400.0d;
+    private final double speed = 28800.0d;
 
     private final Map<Integer, Interval> timesByType = new TreeMap<>();
 

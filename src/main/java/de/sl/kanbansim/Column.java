@@ -115,6 +115,10 @@ public class Column {
         return sum;
     }
 
+    public Integer getTypeId() {
+        return typeId;
+    }
+
     public Card getCardToPull(long elapsedHours) {
         for(Map.Entry<Card, Long> e : cards.entrySet()) {
             final Card card = e.getKey();

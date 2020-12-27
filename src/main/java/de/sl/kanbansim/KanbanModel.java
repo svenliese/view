@@ -18,6 +18,7 @@ public class KanbanModel extends ModelBase {
     public static final Integer TYPE_WORK = Integer.valueOf(11);
     public static final Integer TYPE_DEPLOY = Integer.valueOf(12);
     public static final Integer TYPE_READY_REVIEW = Integer.valueOf(13);
+    public static final Integer TYPE_DONE = Integer.valueOf(15);
 
     public static KanbanModel getWipBoard(KanbanConfig config) {
         final KanbanModel model = new KanbanModel(config);
@@ -44,7 +45,7 @@ public class KanbanModel extends ModelBase {
 
         model.addColumn(new Column("review", Integer.valueOf(14), 1));
 
-        model.addColumn(new Column("done", Integer.valueOf(15), 0));
+        model.addColumn(new Column("done", TYPE_DONE, 0));
 
         return model;
     }
@@ -74,7 +75,7 @@ public class KanbanModel extends ModelBase {
 
         model.addColumn(new Column("review", Integer.valueOf(14), 1));
 
-        model.addColumn(new Column("done", Integer.valueOf(15), 0));
+        model.addColumn(new Column("done", TYPE_DONE, 0));
 
         return model;
     }
@@ -157,6 +158,10 @@ public class KanbanModel extends ModelBase {
                 }
             }
         }
+    }
+
+    public int getMaxWorkers() {
+        return config.getMaxWorkers();
     }
 
     @Override

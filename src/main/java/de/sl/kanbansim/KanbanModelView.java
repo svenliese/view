@@ -13,14 +13,17 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
 
     private final KanbanModel model;
 
-    private final Map<Integer, SimpleText<C>> cardInfoMap = new HashMap<>();
+    private final Map<Integer, CardInfo<C>> cardInfoMap = new HashMap<>();
 
     final float textHeight = 0.025f;
     final float ySpace = 0.015f;
+    final float cardSize;
 
     public KanbanModelView(IColorFactory<C> colorFactory, KanbanModel model, ViewBounds viewBounds) {
         super(model);
         this.model = model;
+
+        cardSize = viewBounds.getH()/4/model.getMaxWorkers();
 
         initColumns(colorFactory, model.getColumns(), viewBounds);
     }
@@ -97,28 +100,28 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
         y += textHeight + ySpace;
         childHeight -= textHeight + ySpace;
 
-        //
-        // card info
-        //
-
         if(column.getColumnSum()==1) {
-            final SimpleText<C> cardInfoView = new SimpleText<>(getCardInfoText(column), colorFactory.getWhite());
-            cardInfoView.setXPercentage(viewBounds.getX() + 0.01f);
-            cardInfoView.setYPercentage(y);
-            cardInfoView.setWPercentage(viewBounds.getW() - 0.02f);
-            cardInfoView.setHPercentage(textHeight);
-            cardInfoView.setTextSize(18);
-            addView(cardInfoView);
-            cardInfoMap.put(column.getId(), cardInfoView);
-            y += textHeight + ySpace;
-            childHeight -= textHeight + ySpace;
-        }
 
-        //
-        // child columns
-        //
+            //
+            // card info
+            //
 
-        if(column.hasChildren()) {
+            final CardInfo<C> cardInfo = new CardInfo<>(
+                column,
+                new ViewBounds(viewBounds.getX(), y, viewBounds.getW(), childHeight),
+                colorFactory,
+                cardSize,
+                model.getMaxWorkers()
+            );
+            addViews(cardInfo.getAllViews());
+            cardInfoMap.put(column.getId(), cardInfo);
+
+        } else {
+
+            //
+            // child columns
+            //
+
             final ViewBounds childBounds = new ViewBounds(
                 viewBounds.getX(),
                 y,
@@ -127,10 +130,6 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
             );
             initColumns(colorFactory, column.getChildren(), childBounds);
         }
-    }
-
-    private String getCardInfoText(Column column) {
-        return "cards "+column.getTicketCount();
     }
 
     private int getColumnSum(List<Column> myColumns) {
@@ -144,9 +143,9 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
     public void updateViews(Object modelObject) {
         if(modelObject instanceof Column) {
             final Column column = (Column) modelObject;
-            final SimpleText<C> cardInfoView = cardInfoMap.get(column.getId());
+            final CardInfo<C> cardInfoView = cardInfoMap.get(column.getId());
             if(cardInfoView!=null) {
-                cardInfoView.setText(getCardInfoText(column));
+                cardInfoView.update();
             }
         } else {
             throw new IllegalStateException("unexpected model object "+modelObject.getClass());
