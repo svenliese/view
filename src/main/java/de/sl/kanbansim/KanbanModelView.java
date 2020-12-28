@@ -15,15 +15,13 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
 
     private final Map<Integer, CardInfo<C>> cardInfoMap = new HashMap<>();
 
-    final float textHeight = 0.025f;
-    final float ySpace = 0.015f;
     final float cardSize;
 
     public KanbanModelView(IColorFactory<C> colorFactory, KanbanModel model, ViewBounds viewBounds) {
         super(model);
         this.model = model;
 
-        cardSize = viewBounds.getH()/4/model.getMaxWorkers();
+        cardSize = viewBounds.getH()/3/model.getMaxWorkers();
 
         initColumns(colorFactory, model.getColumns(), viewBounds);
     }
@@ -51,8 +49,8 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
 
     private void initColumn(IColorFactory<C> colorFactory, Column column, ViewBounds viewBounds) {
 
-        float y = viewBounds.getY()+ySpace;
-        float childHeight = viewBounds.getH() - ySpace;
+        float y = viewBounds.getY() + KanbanCompareModelView.ySpace;
+        float childHeight = viewBounds.getH() - KanbanCompareModelView.ySpace;
 
         //
         // column border
@@ -80,11 +78,11 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
         wipView.setXPercentage(viewBounds.getX() + 0.01f);
         wipView.setYPercentage(y);
         wipView.setWPercentage(viewBounds.getW() - 0.02f);
-        wipView.setHPercentage(textHeight);
-        wipView.setTextSize(18);
+        wipView.setHPercentage(KanbanCompareModelView.textHeight);
+        wipView.setTextSize(KanbanCompareModelView.textSize);
         addView(wipView);
-        y += textHeight + ySpace;
-        childHeight -= textHeight + ySpace;
+        y += KanbanCompareModelView.textHeight + KanbanCompareModelView.ySpace;
+        childHeight -= KanbanCompareModelView.textHeight + KanbanCompareModelView.ySpace;
 
         //
         // column name
@@ -94,11 +92,11 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
         nameView.setXPercentage(viewBounds.getX() + 0.01f);
         nameView.setYPercentage(y);
         nameView.setWPercentage(viewBounds.getW() - 0.02f);
-        nameView.setHPercentage(textHeight);
-        nameView.setTextSize(18);
+        nameView.setHPercentage(KanbanCompareModelView.textHeight);
+        nameView.setTextSize(KanbanCompareModelView.textSize);
         addView(nameView);
-        y += textHeight + ySpace;
-        childHeight -= textHeight + ySpace;
+        y += KanbanCompareModelView.textHeight + KanbanCompareModelView.ySpace;
+        childHeight -= KanbanCompareModelView.textHeight + KanbanCompareModelView.ySpace;
 
         if(column.getColumnSum()==1) {
 

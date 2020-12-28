@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 public class KanbanSim extends AppBase {
 
     public KanbanSim(KanbanCompareModelView<Color, BufferedImage> viewModel) {
-        super("kanban simulation 1.0", 1200, 800, viewModel);
+        super("kanban simulation", 1200, 800, viewModel);
     }
 
     @Override

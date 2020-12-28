@@ -10,9 +10,6 @@ import java.util.List;
  */
 public class CardInfo<C> {
 
-    private final float textHeight = 0.025f;
-    private final float ySpace = 0.015f;
-
     private final Column column;
 
     private final SimpleText<C> cardCountText;
@@ -33,11 +30,11 @@ public class CardInfo<C> {
         cardCountText.setXPercentage(viewBounds.getX() + 0.01f);
         cardCountText.setYPercentage(y);
         cardCountText.setWPercentage(viewBounds.getW() - 0.02f);
-        cardCountText.setHPercentage(textHeight);
-        cardCountText.setTextSize(18);
+        cardCountText.setHPercentage(KanbanCompareModelView.textHeight);
+        cardCountText.setTextSize(KanbanCompareModelView.textSize);
         allViews.add(cardCountText);
 
-        y += textHeight + ySpace;
+        y += KanbanCompareModelView.textHeight + 2*KanbanCompareModelView.ySpace;
 
         if(!column.getTypeId().equals(KanbanModel.TYPE_DONE)) {
             for (int i = 0; i < cardCount; i++) {
@@ -50,7 +47,7 @@ public class CardInfo<C> {
                 allViews.add(cardRect);
                 cardRectList.add(cardRect);
 
-                y += cardSize + ySpace;
+                y += cardSize + KanbanCompareModelView.ySpace;
             }
         }
 

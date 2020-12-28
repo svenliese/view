@@ -9,15 +9,16 @@ import java.util.List;
  */
 public class KanbanCompareModelView<C, I> extends ViewModel<C, I> {
 
+    static final float textHeight = 0.01f;
+    static final float ySpace = 0.015f;
+    static final int textSize = 16;
+
     private final KanbanCompareModel model;
 
     private final KanbanModelView<C, I> modelView1;
     private final KanbanModelView<C, I> modelView2;
 
     private final SimpleText<C> timeInfo;
-
-    private final float textHeight = 0.025f;
-    private final float ySpace = 0.015f;
 
     public KanbanCompareModelView(IColorFactory<C> colorFactory, KanbanCompareModel model, ViewBounds viewBounds) {
         super(model);
@@ -46,7 +47,7 @@ public class KanbanCompareModelView<C, I> extends ViewModel<C, I> {
         timeInfo.setYPercentage(y);
         timeInfo.setWPercentage(viewBounds.getW() - 0.02f);
         timeInfo.setHPercentage(textHeight);
-        timeInfo.setTextSize(18);
+        timeInfo.setTextSize(textSize);
         timeInfo.setHAlign(SimpleText.LEFT);
         addView(timeInfo);
         y += ySpace;
