@@ -55,7 +55,7 @@ public class KanbanModel extends ModelBase {
 
         model.addColumn(new Column("ideas", Integer.valueOf(1), 3));
 
-        final Column discovery = new Column("discovery", Integer.valueOf(2), 0);
+        final Column discovery = new Column("discovery", Integer.valueOf(2), 2);
         discovery.addChild(new Column(discovery, "analysis", TYPE_ANALYSIS, 0));
         discovery.addChild(new Column(discovery, "concept", TYPE_CONCEPT, 0));
         discovery.addChild(new Column(discovery, "ready", Integer.valueOf(5), 0));
@@ -66,7 +66,7 @@ public class KanbanModel extends ModelBase {
         dos.addChild(new Column(dos, "ready", Integer.valueOf(8), 0));
         model.addColumn(dos);
 
-        final Column implementation = new Column("implementation", Integer.valueOf(9), 0);
+        final Column implementation = new Column("implementation", Integer.valueOf(9), 4);
         implementation.addChild(new Column(implementation, "prepare", TYPE_PREPARE, 0));
         implementation.addChild(new Column(implementation, "work", TYPE_WORK, 0));
         implementation.addChild(new Column(implementation, "deploy", TYPE_DEPLOY, 0));
@@ -108,7 +108,7 @@ public class KanbanModel extends ModelBase {
         return columns;
     }
 
-    public void simulate(long elapsedHours, ModelBase modelBase) {
+    public void simulate(long elapsedMillis, ModelBase modelBase) {
 
         //
         // fill backlog
@@ -116,7 +116,7 @@ public class KanbanModel extends ModelBase {
 
         final Column backlogColumn = childColumns.get(0);
         while(backlogColumn.canPull() && !cardsToProcess.isEmpty()) {
-            backlogColumn.addTicket(cardsToProcess.poll(), elapsedHours);
+            backlogColumn.addTicket(cardsToProcess.poll(), elapsedMillis);
             modelBase.informListeners(backlogColumn);
         }
 
@@ -144,10 +144,10 @@ public class KanbanModel extends ModelBase {
             }
 
             if(canPull) {
-                final Card cardToPull = sourceColumn.getCardToPull(elapsedHours);
+                final Card cardToPull = sourceColumn.getCardToPull(elapsedMillis);
                 if (cardToPull != null) {
                     sourceColumn.removeTicket(cardToPull);
-                    targetColumn.addTicket(cardToPull, elapsedHours);
+                    targetColumn.addTicket(cardToPull, elapsedMillis);
                     if(colIdx==childColumns.size()-1) {
                         activeCards--;
                     } else if(colIdx==1) {
@@ -166,6 +166,6 @@ public class KanbanModel extends ModelBase {
 
     @Override
     protected void simulate(long elapsedMillis) {
-
+        simulate(elapsedMillis, this);
     }
 }

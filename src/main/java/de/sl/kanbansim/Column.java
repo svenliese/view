@@ -22,7 +22,7 @@ public class Column {
     private final List<Column> children = new ArrayList<>();
 
     /** map of card's and their time when entered this column */
-    private final Map<Card, Long> cards = new HashMap<>();
+    private final Map<Card, Long> cards = new TreeMap<>();
 
     public Column(Column parent, String name, Integer typeId, int wip) {
         this.parent = parent;
@@ -91,8 +91,8 @@ public class Column {
         return wip==0 || cards.size() < wip;
     }
 
-    public void addTicket(Card card, long elapsedHours) {
-        cards.put(card, Long.valueOf(elapsedHours));
+    public void addTicket(Card card, long elapsedMillis) {
+        cards.put(card, Long.valueOf(elapsedMillis));
     }
 
     public void removeTicket(Card card) {
@@ -119,14 +119,19 @@ public class Column {
         return typeId;
     }
 
-    public Card getCardToPull(long elapsedHours) {
+    public Card getCardToPull(long elapsedMillis) {
         for(Map.Entry<Card, Long> e : cards.entrySet()) {
             final Card card = e.getKey();
-            final Long time = card.getHours(typeId);
-            if(time==null || time.longValue() < elapsedHours - e.getValue().longValue()) {
+            final Long time = card.getMillis(typeId);
+            if(time==null || time.longValue() < elapsedMillis - e.getValue().longValue()) {
                 return card;
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

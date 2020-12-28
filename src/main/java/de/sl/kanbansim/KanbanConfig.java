@@ -2,9 +2,7 @@ package de.sl.kanbansim;
 
 import de.sl.model.Interval;
 
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @author SL
@@ -17,16 +15,17 @@ public class KanbanConfig {
 
     private final int maxWorkers;
 
-    private final long defaultTime;
+    private final long defaultMillis;
 
-    private final double speed = 28800.0d;
+    private final double speed;
 
-    private final Map<Integer, Interval> timesByType = new TreeMap<>();
+    private final Map<Integer, Interval> millisByType = new TreeMap<>();
 
-    public KanbanConfig(int cardCount, int maxWorkers, int defaultHours) {
+    public KanbanConfig(int cardCount, int maxWorkers, long defaultMillis, double speed) {
         this.cardCount = cardCount;
         this.maxWorkers = maxWorkers;
-        this.defaultTime = defaultHours;
+        this.defaultMillis = defaultMillis;
+        this.speed = speed;
     }
 
     public int getCardCount() {
@@ -37,20 +36,24 @@ public class KanbanConfig {
         return maxWorkers;
     }
 
-    public long getDefaultHours() {
-        return defaultTime;
+    public long getDefaultMillis() {
+        return defaultMillis;
     }
 
     public void addInterval(Integer typeId, Interval interval) {
-        timesByType.put(typeId, interval);
+        millisByType.put(typeId, interval);
     }
 
-    public long getHoursForType(Integer typeId) {
-        final Interval interval = timesByType.get(typeId);
+    public long getMillisForType(Integer typeId) {
+        final Interval interval = millisByType.get(typeId);
         if(interval==null) {
-            return defaultTime;
+            return defaultMillis;
         }
-        return interval.getRandom(random) / Interval.MILLIS_PER_HOUR;
+        return interval.getRandomMillis(random);
+    }
+
+    public Set<Integer> getConfiguredTypeIds() {
+        return millisByType.keySet();
     }
 
     public double getSpeed() {

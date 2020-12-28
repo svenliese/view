@@ -18,13 +18,7 @@ public class KanbanCompareModel extends ModelBase {
         this.model2 = model2;
 
         for(int i=0; i<config.getCardCount(); i++) {
-            final Card card = new Card(Long.valueOf(config.getDefaultHours()));
-            card.addTime(KanbanModel.TYPE_ANALYSIS, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_ANALYSIS)));
-            card.addTime(KanbanModel.TYPE_CONCEPT, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_CONCEPT)));
-            card.addTime(KanbanModel.TYPE_PREPARE, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_PREPARE)));
-            card.addTime(KanbanModel.TYPE_WORK, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_WORK)));
-            card.addTime(KanbanModel.TYPE_DEPLOY, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_DEPLOY)));
-            card.addTime(KanbanModel.TYPE_READY_REVIEW, Long.valueOf(config.getHoursForType(KanbanModel.TYPE_READY_REVIEW)));
+            final Card card = new Card(i, config);
             model1.addCard(card);
             model2.addCard(card);
         }
@@ -44,8 +38,8 @@ public class KanbanCompareModel extends ModelBase {
 
     @Override
     protected void simulate(long elapsedMillis) {
-        model1.simulate(elapsedMillis/(60*60*1000), this);
-        model2.simulate(elapsedMillis/(60*60*1000), this);
+        model1.simulate(elapsedMillis, this);
+        model2.simulate(elapsedMillis, this);
 
         long newElapsedDays = elapsedMillis/(24*60*60*1000);
         if(newElapsedDays>elapsedDays) {

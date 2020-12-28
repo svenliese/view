@@ -21,6 +21,14 @@
             <version>5.4.2</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>de.sl</groupId>
+            <artifactId>tools</artifactId>
+            <version>3.9.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/tools-3.9.0-v11.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
@@ -40,18 +48,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <executions>
-                    <execution>
-                        <id>compile-jdk8</id>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <source>8</source>
-                            <target>8</target>
-                            <fork>false</fork>
-                            <outputDirectory>${project.build.outputDirectory}_jdk8</outputDirectory>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>compile-jdk11</id>
                         <goals>
@@ -76,17 +72,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.0.2</version>
                 <executions>
-                    <execution>
-                        <id>build-jdk8</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <phase>package</phase>
-                        <configuration>
-                            <classifier>v8</classifier>
-                            <classesDirectory>${project.build.outputDirectory}_jdk8</classesDirectory>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>build-jdk11</id>
                         <goals>
