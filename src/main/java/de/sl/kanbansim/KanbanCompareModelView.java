@@ -18,8 +18,6 @@ public class KanbanCompareModelView<C, I> extends ViewModel<C, I> {
     private final KanbanModelView<C, I> modelView1;
     private final KanbanModelView<C, I> modelView2;
 
-    private final SimpleText<C> timeInfo;
-
     private final TextButton<C> button;
 
     public KanbanCompareModelView(IColorFactory<C> colorFactory, KanbanCompareModel model, ViewBounds viewBounds) {
@@ -53,15 +51,6 @@ public class KanbanCompareModelView<C, I> extends ViewModel<C, I> {
         button.setHAlign(SimpleText.CENTER);
         addView(button);
 
-        timeInfo = new SimpleText<>(model.getTimeInfoText(), colorFactory.getWhite());
-        timeInfo.setXPercentage(viewBounds.getX() + 0.07f);
-        timeInfo.setYPercentage(y);
-        timeInfo.setWPercentage(viewBounds.getW() - 0.02f);
-        timeInfo.setHPercentage(textHeight);
-        timeInfo.setTextSize(textSize);
-        timeInfo.setHAlign(SimpleText.LEFT);
-        addView(timeInfo);
-
         y += ySpace;
         y += textHeight;
 
@@ -84,8 +73,6 @@ public class KanbanCompareModelView<C, I> extends ViewModel<C, I> {
         if(modelObject instanceof Column) {
             modelView1.updateViews(modelObject);
             modelView2.updateViews(modelObject);
-        } else if(modelObject == model) {
-            timeInfo.setText(model.getTimeInfoText());
         } else {
             throw new IllegalStateException("unexpected model object "+modelObject.getClass());
         }

@@ -10,17 +10,22 @@ import java.util.List;
  */
 public class CardInfo<C> {
 
+    private final KanbanModel model;
+
     private final Column column;
 
     private final IColorFactory<C> colorFactory;
 
     private final SimpleText<C> cardCountText;
 
+    private final SimpleText<C> timeInfo;
+
     private final List<IView<C>> allViews = new ArrayList<>();
 
     private final List<Rect<C>> cardRectList = new ArrayList<>();
 
-    public CardInfo(Column column, ViewBounds viewBounds, IColorFactory<C> colorFactory, float cardSize, int cardCount) {
+    public CardInfo(KanbanModel model, Column column, ViewBounds viewBounds, IColorFactory<C> colorFactory, float cardSize) {
+        this.model = model;
         this.column = column;
         this.colorFactory = colorFactory;
 
@@ -36,11 +41,22 @@ public class CardInfo<C> {
         cardCountText.setHPercentage(KanbanCompareModelView.textHeight);
         cardCountText.setTextSize(KanbanCompareModelView.textSize);
         allViews.add(cardCountText);
+        y += KanbanCompareModelView.textHeight + KanbanCompareModelView.ySpace;
 
-        y += KanbanCompareModelView.textHeight + 2*KanbanCompareModelView.ySpace;
+        if(column.getTypeId().equals(KanbanModel.TYPE_DONE)) {
+            timeInfo = new SimpleText<>(getTimeInfoText(), colorFactory.getWhite());
+            timeInfo.setXPercentage(viewBounds.getX() + 0.01f);
+            timeInfo.setYPercentage(y);
+            timeInfo.setWPercentage(viewBounds.getW() - 0.02f);
+            timeInfo.setHPercentage(KanbanCompareModelView.textHeight);
+            timeInfo.setTextSize(KanbanCompareModelView.textSize);
+            allViews.add(timeInfo);
+        } else {
+            timeInfo = null;
 
-        if(!column.getTypeId().equals(KanbanModel.TYPE_DONE)) {
-            for (int i = 0; i < cardCount; i++) {
+            y += KanbanCompareModelView.ySpace;
+
+            for (int i = 0; i < model.getMaxWorkers(); i++) {
                 final Rect<C> cardRect = new Rect<>(colorFactory.getYellow());
                 cardRect.setXPercentage(viewBounds.getX() + (viewBounds.getW() - cardSize) / 2);
                 cardRect.setYPercentage(y);
@@ -61,10 +77,16 @@ public class CardInfo<C> {
         return allViews;
     }
 
+    private String getTimeInfoText() {
+        return "days "+model.getElapsedDays();
+    }
+
     public void update() {
         cardCountText.setText("cards "+column.getTicketCount());
 
-        if(!column.getTypeId().equals(KanbanModel.TYPE_DONE)) {
+        if(column.getTypeId().equals(KanbanModel.TYPE_DONE)) {
+            timeInfo.setText(getTimeInfoText());
+        } else {
             for (Rect<C> rect : cardRectList) {
                 rect.setVisible(false);
             }

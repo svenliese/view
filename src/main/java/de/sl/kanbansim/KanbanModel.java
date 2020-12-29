@@ -89,6 +89,8 @@ public class KanbanModel extends ModelBase {
 
     private final Queue<Card> cardsToProcess = new LinkedList<>();
 
+    private long elapsedDays = 0;
+
     private int activeCards = 0;
 
     private long waitingTime = 0;
@@ -165,6 +167,13 @@ public class KanbanModel extends ModelBase {
 
     public void simulate(long elapsedMillis, ModelBase modelBase) {
 
+
+        long newElapsedDays = elapsedMillis/(60*60*1000)/config.getWorkingDayHours();
+        if(newElapsedDays>elapsedDays) {
+            elapsedDays = newElapsedDays;
+            informListeners(columns.get(columns.size()-1));
+        }
+
         //
         // fill backlog
         //
@@ -198,6 +207,10 @@ public class KanbanModel extends ModelBase {
 
     public long getWaitingTime() {
         return waitingTime;
+    }
+
+    public long getElapsedDays() {
+        return elapsedDays;
     }
 
     @Override

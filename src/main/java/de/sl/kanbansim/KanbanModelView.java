@@ -119,11 +119,11 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
             //
 
             final CardInfo<C> cardInfo = new CardInfo<>(
+                model,
                 column,
                 new ViewBounds(viewBounds.getX(), y, viewBounds.getW(), childHeight),
                 colorFactory,
-                cardSize,
-                model.getMaxWorkers()
+                cardSize
             );
             addViews(cardInfo.getAllViews());
             cardInfoMap.put(column.getId(), cardInfo);

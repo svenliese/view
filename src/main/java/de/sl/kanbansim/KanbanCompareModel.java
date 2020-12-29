@@ -11,8 +11,6 @@ public class KanbanCompareModel extends ModelBase {
     private final KanbanModel model2;
     private final KanbanConfig config;
 
-    private long elapsedDays = 0;
-
     public KanbanCompareModel(KanbanModel model1, KanbanModel model2, KanbanConfig config) {
         super(config.getSpeed());
         this.model1 = model1;
@@ -34,19 +32,9 @@ public class KanbanCompareModel extends ModelBase {
         return model2;
     }
 
-    public String getTimeInfoText() {
-        return "Tage: "+elapsedDays;
-    }
-
     @Override
     protected void simulate(long elapsedMillis) {
         model1.simulate(elapsedMillis, this);
         model2.simulate(elapsedMillis, this);
-
-        long newElapsedDays = elapsedMillis/(60*60*1000)/config.getWorkingDayHours();
-        if(newElapsedDays>elapsedDays) {
-            elapsedDays = newElapsedDays;
-            informListeners(this);
-        }
     }
 }
