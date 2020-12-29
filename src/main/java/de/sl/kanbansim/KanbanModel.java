@@ -12,6 +12,7 @@ import java.util.Queue;
  */
 public class KanbanModel extends ModelBase {
 
+    public static final Integer TYPE_IDEAS = Integer.valueOf(1);
     public static final Integer TYPE_ANALYSIS = Integer.valueOf(3);
     public static final Integer TYPE_CONCEPT = Integer.valueOf(4);
     public static final Integer TYPE_PREPARE = Integer.valueOf(10);
@@ -23,7 +24,7 @@ public class KanbanModel extends ModelBase {
     public static KanbanModel getWipBoard(KanbanConfig config) {
         final KanbanModel model = new KanbanModel(config);
 
-        model.addColumn(new Column("ideas", Integer.valueOf(1), 3));
+        model.addColumn(new Column("ideas", TYPE_IDEAS, 3));
 
         final Column discovery = new Column("discovery", Integer.valueOf(2), 3);
         discovery.addChild(new Column(discovery, "analysis", TYPE_ANALYSIS, 0));
@@ -53,7 +54,7 @@ public class KanbanModel extends ModelBase {
     public static KanbanModel getOpenBoard(KanbanConfig config) {
         final KanbanModel model = new KanbanModel(config);
 
-        model.addColumn(new Column("ideas", Integer.valueOf(1), 3));
+        model.addColumn(new Column("ideas", TYPE_IDEAS, 3));
 
         final Column discovery = new Column("discovery", Integer.valueOf(2), 2);
         discovery.addChild(new Column(discovery, "analysis", TYPE_ANALYSIS, 0));
@@ -86,9 +87,13 @@ public class KanbanModel extends ModelBase {
 
     private final List<Column> childColumns = new ArrayList<>();
 
-    private Queue<Card> cardsToProcess = new LinkedList<>();
+    private final Queue<Card> cardsToProcess = new LinkedList<>();
 
     private int activeCards = 0;
+
+    private long waitingTime = 0;
+
+    private int blockedInIdeas = 0;
 
     public KanbanModel(KanbanConfig config) {
         super(config.getSpeed());
@@ -108,6 +113,56 @@ public class KanbanModel extends ModelBase {
         return columns;
     }
 
+    /**
+     * @return true in case of changes
+     */
+    private boolean move(Column sourceColumn, Column targetColumn, long elapsedMillis) {
+        boolean modified = false;
+        final Card cardToPull = sourceColumn.getCardToPull(elapsedMillis);
+        if (cardToPull != null) {
+
+            boolean canPull = targetColumn.canPull();
+
+            if(canPull) {
+                final Column targetParent = targetColumn.getParent();
+                final Column sourceParent = sourceColumn.getParent();
+                if(targetParent!=null && targetParent!=sourceParent) {
+                    if(targetParent.getWip()>0 && targetParent.getAllTicketCount()>=targetParent.getWip()) {
+                        canPull = false;
+                    }
+                }
+            }
+
+            if(canPull) {
+                final long blockedTime = cardToPull.unblock(elapsedMillis);
+                if(blockedTime>0) {
+                    waitingTime += blockedTime;
+
+                    if(sourceColumn.getTypeId().equals(KanbanModel.TYPE_IDEAS)) {
+                        blockedInIdeas--;
+                    }
+                }
+
+                sourceColumn.removeTicket(cardToPull);
+                targetColumn.addTicket(cardToPull, elapsedMillis);
+                if (targetColumn.getTypeId().equals(KanbanModel.TYPE_DONE)) {
+                    activeCards--;
+                } else if (sourceColumn.getTypeId().equals(KanbanModel.TYPE_IDEAS)) {
+                    activeCards++;
+                }
+                modified = true;
+            } else if(!cardToPull.isBlocked() && (!sourceColumn.getTypeId().equals(KanbanModel.TYPE_IDEAS) || activeCards+blockedInIdeas<config.getMaxWorkers())) {
+                cardToPull.setBlocked(elapsedMillis);
+                modified = true;
+
+                if(sourceColumn.getTypeId().equals(KanbanModel.TYPE_IDEAS)) {
+                    blockedInIdeas++;
+                }
+            }
+        }
+        return modified;
+    }
+
     public void simulate(long elapsedMillis, ModelBase modelBase) {
 
         //
@@ -121,47 +176,28 @@ public class KanbanModel extends ModelBase {
         }
 
         //
-        // move cards over the board
+        // move cards over the board from right to left
         //
 
         for(int colIdx=childColumns.size()-1; colIdx>0; colIdx--) {
-            if(colIdx==1 && activeCards>=config.getMaxWorkers()) {
-                continue;
-            }
 
             final Column targetColumn = childColumns.get(colIdx);
             final Column sourceColumn = childColumns.get(colIdx-1);
 
-            boolean canPull = targetColumn.canPull();
-            if(canPull) {
-                final Column targetParent = targetColumn.getParent();
-                final Column sourceParent = sourceColumn.getParent();
-                if(targetParent!=null && targetParent!=sourceParent) {
-                    if(targetParent.getWip()>0 && targetParent.getAllTicketCount()>=targetParent.getWip()) {
-                        canPull = false;
-                    }
-                }
-            }
-
-            if(canPull) {
-                final Card cardToPull = sourceColumn.getCardToPull(elapsedMillis);
-                if (cardToPull != null) {
-                    sourceColumn.removeTicket(cardToPull);
-                    targetColumn.addTicket(cardToPull, elapsedMillis);
-                    if(colIdx==childColumns.size()-1) {
-                        activeCards--;
-                    } else if(colIdx==1) {
-                        activeCards++;
-                    }
-                    modelBase.informListeners(targetColumn);
-                    modelBase.informListeners(sourceColumn);
-                }
+            while(move(sourceColumn, targetColumn, elapsedMillis)) {
+                modelBase.informListeners(targetColumn);
+                modelBase.informListeners(sourceColumn);
+                modelBase.informListeners(columns.get(columns.size()-1));
             }
         }
     }
 
     public int getMaxWorkers() {
         return config.getMaxWorkers();
+    }
+
+    public long getWaitingTime() {
+        return waitingTime;
     }
 
     @Override

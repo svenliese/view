@@ -15,6 +15,9 @@ public abstract class ModelBase implements Runnable {
 
     private double startMillis;
 
+    private boolean simStopped = false;
+    private double pauseStartMillis;
+
     /**
      * @param speed the real time will be multiplied with the given speed
      */
@@ -38,10 +41,26 @@ public abstract class ModelBase implements Runnable {
         active = false;
     }
 
+    public void pause() {
+        simStopped = true;
+        pauseStartMillis = System.currentTimeMillis();
+    }
+
+    public boolean isPause() {
+        return simStopped;
+    }
+
+    public void resume() {
+        startMillis += (System.currentTimeMillis()-pauseStartMillis);
+        simStopped = false;
+    }
+
     @Override
     public void run() {
         while(active) {
-            simulate( (long)((System.currentTimeMillis()-startMillis)*speed ));
+            if(!simStopped) {
+                simulate((long) ((System.currentTimeMillis() - startMillis) * speed));
+            }
 
             try {
                 myThread.sleep(100);

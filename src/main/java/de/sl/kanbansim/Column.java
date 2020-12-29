@@ -120,6 +120,18 @@ public class Column {
     }
 
     public Card getCardToPull(long elapsedMillis) {
+
+        // get longest blocked card first
+        Card oldestBlockedCard = null;
+        for(Card card : cards.keySet()) {
+            if(card.isBlocked() && (oldestBlockedCard==null || card.getStartBlockMillis()<oldestBlockedCard.getStartBlockMillis())) {
+                oldestBlockedCard = card;
+            }
+        }
+        if(oldestBlockedCard!=null) {
+            return  oldestBlockedCard;
+        }
+
         for(Map.Entry<Card, Long> e : cards.entrySet()) {
             final Card card = e.getKey();
             final Long time = card.getMillis(typeId);
@@ -127,7 +139,13 @@ public class Column {
                 return card;
             }
         }
+
+        // no card to pull
         return null;
+    }
+
+    public Set<Card> getCards() {
+        return cards.keySet();
     }
 
     @Override

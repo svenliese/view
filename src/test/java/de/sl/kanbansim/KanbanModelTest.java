@@ -15,7 +15,7 @@ class KanbanModelTest {
         final Integer columnType2 = Integer.valueOf(2);
         final Integer columnType3 = Integer.valueOf(3);
 
-        final KanbanConfig config = new KanbanConfig(1, 1, 0, Interval.MILLIS_PER_HOUR/2.0d);
+        final KanbanConfig config = new KanbanConfig(1, 1, 8, 0, Interval.MILLIS_PER_HOUR/2.0d);
         config.addInterval(columnType1, Interval.getHourInterval(1, 1));
         config.addInterval(columnType2, Interval.getHourInterval(1, 1));
 

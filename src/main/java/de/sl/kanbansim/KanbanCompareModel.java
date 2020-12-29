@@ -9,6 +9,7 @@ public class KanbanCompareModel extends ModelBase {
 
     private final KanbanModel model1;
     private final KanbanModel model2;
+    private final KanbanConfig config;
 
     private long elapsedDays = 0;
 
@@ -16,11 +17,12 @@ public class KanbanCompareModel extends ModelBase {
         super(config.getSpeed());
         this.model1 = model1;
         this.model2 = model2;
+        this.config = config;
 
         for(int i=0; i<config.getCardCount(); i++) {
             final Card card = new Card(i, config);
             model1.addCard(card);
-            model2.addCard(card);
+            model2.addCard(card.getCopy());
         }
     }
 
@@ -41,7 +43,7 @@ public class KanbanCompareModel extends ModelBase {
         model1.simulate(elapsedMillis, this);
         model2.simulate(elapsedMillis, this);
 
-        long newElapsedDays = elapsedMillis/(24*60*60*1000);
+        long newElapsedDays = elapsedMillis/(60*60*1000)/config.getWorkingDayHours();
         if(newElapsedDays>elapsedDays) {
             elapsedDays = newElapsedDays;
             informListeners(this);

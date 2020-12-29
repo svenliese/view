@@ -14,6 +14,9 @@ public class Card implements Comparable<Card> {
 
     private final Long defaultMillis;
 
+    private boolean blocked = false;
+    private long startBlockMillis;
+
     public Card(int id, KanbanConfig config) {
         this.id = id;
         this.defaultMillis = Long.valueOf(config.getDefaultMillis());
@@ -22,12 +25,46 @@ public class Card implements Comparable<Card> {
         }
     }
 
+    public Card(int id, Map<Integer, Long> millisByType, Long defaultMillis) {
+        this.id = id;
+        this.millisByType.putAll(millisByType);
+        this.defaultMillis = defaultMillis;
+    }
+
+    public Card getCopy() {
+        return new Card(id, millisByType, defaultMillis);
+    }
+
     public Long getMillis(Integer type) {
         Long result = millisByType.get(type);
         if(result==null) {
             result = defaultMillis;
         }
         return result;
+    }
+
+    public void setBlocked(long elapsedMillis) {
+        if(!blocked) {
+            blocked = true;
+            startBlockMillis = elapsedMillis;
+        }
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public long unblock(long elapsedMillis) {
+        long blockedMillis = 0;
+        if(blocked) {
+            blocked = false;
+            blockedMillis = elapsedMillis-startBlockMillis;
+        }
+        return blockedMillis;
+    }
+
+    public long getStartBlockMillis() {
+        return startBlockMillis;
     }
 
     @Override

@@ -15,15 +15,18 @@ public class KanbanConfig {
 
     private final int maxWorkers;
 
+    private final int workingDayHours;
+
     private final long defaultMillis;
 
     private final double speed;
 
     private final Map<Integer, Interval> millisByType = new TreeMap<>();
 
-    public KanbanConfig(int cardCount, int maxWorkers, long defaultMillis, double speed) {
+    public KanbanConfig(int cardCount, int maxWorkers, int workingDayHours, long defaultMillis, double speed) {
         this.cardCount = cardCount;
         this.maxWorkers = maxWorkers;
+        this.workingDayHours = workingDayHours;
         this.defaultMillis = defaultMillis;
         this.speed = speed;
     }
@@ -34,6 +37,10 @@ public class KanbanConfig {
 
     public int getMaxWorkers() {
         return maxWorkers;
+    }
+
+    public int getWorkingDayHours() {
+        return workingDayHours;
     }
 
     public long getDefaultMillis() {

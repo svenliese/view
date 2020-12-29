@@ -24,12 +24,18 @@ public class KanbanSim extends AppBase {
 
     public static void main(String[] args) {
 
-        final KanbanConfig config = new KanbanConfig(100, 6, Interval.MILLIS_PER_HOUR, 28800.0d);
-        config.addInterval(KanbanModel.TYPE_ANALYSIS, Interval.getDayInterval(1, 3));
-        config.addInterval(KanbanModel.TYPE_CONCEPT, Interval.getDayInterval(1, 3));
-        config.addInterval(KanbanModel.TYPE_PREPARE, Interval.getDayInterval(1, 2));
-        config.addInterval(KanbanModel.TYPE_WORK, Interval.getDayInterval(1, 4));
-        config.addInterval(KanbanModel.TYPE_DEPLOY, Interval.getDayInterval(1, 2));
+        final KanbanConfig config = new KanbanConfig(
+            10,
+            6,
+            8,
+            Interval.MILLIS_PER_HOUR,
+            28800.0d
+        );
+        config.addInterval(KanbanModel.TYPE_ANALYSIS, Interval.getHourInterval(config.getWorkingDayHours(), 3*config.getWorkingDayHours()));
+        config.addInterval(KanbanModel.TYPE_CONCEPT, Interval.getHourInterval(config.getWorkingDayHours(), 3*config.getWorkingDayHours()));
+        config.addInterval(KanbanModel.TYPE_PREPARE, Interval.getHourInterval(config.getWorkingDayHours(), 2*config.getWorkingDayHours()));
+        config.addInterval(KanbanModel.TYPE_WORK, Interval.getHourInterval(config.getWorkingDayHours(), 4*config.getWorkingDayHours()));
+        config.addInterval(KanbanModel.TYPE_DEPLOY, Interval.getHourInterval(config.getWorkingDayHours(), 2*config.getWorkingDayHours()));
         config.addInterval(KanbanModel.TYPE_READY_REVIEW, Interval.getHourInterval(6, 24));
 
         final KanbanModel model1 = KanbanModel.getWipBoard(config);

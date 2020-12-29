@@ -12,6 +12,8 @@ public class CardInfo<C> {
 
     private final Column column;
 
+    private final IColorFactory<C> colorFactory;
+
     private final SimpleText<C> cardCountText;
 
     private final List<IView<C>> allViews = new ArrayList<>();
@@ -20,6 +22,7 @@ public class CardInfo<C> {
 
     public CardInfo(Column column, ViewBounds viewBounds, IColorFactory<C> colorFactory, float cardSize, int cardCount) {
         this.column = column;
+        this.colorFactory = colorFactory;
 
         float y = viewBounds.getY();
 
@@ -65,8 +68,15 @@ public class CardInfo<C> {
             for (Rect<C> rect : cardRectList) {
                 rect.setVisible(false);
             }
-            for (int i = 0; i < column.getTicketCount(); i++) {
-                cardRectList.get(i).setVisible(true);
+            int i = 0;
+            for (Card card : column.getCards()) {
+                final Rect<C> cardRect = cardRectList.get(i++);
+                cardRect.setVisible(true);
+                if(card.isBlocked()) {
+                    cardRect.setColor(colorFactory.getRed());
+                } else {
+                    cardRect.setColor(colorFactory.getYellow());
+                }
             }
         }
     }

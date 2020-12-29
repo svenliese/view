@@ -1,5 +1,6 @@
 package de.sl.kanbansim;
 
+import de.sl.model.Interval;
 import de.sl.view.*;
 
 import java.util.HashMap;
@@ -15,6 +16,8 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
 
     private final Map<Integer, CardInfo<C>> cardInfoMap = new HashMap<>();
 
+    private final SimpleText<C> waitingInfo;
+
     final float cardSize;
 
     public KanbanModelView(IColorFactory<C> colorFactory, KanbanModel model, ViewBounds viewBounds) {
@@ -22,6 +25,8 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
         this.model = model;
 
         cardSize = viewBounds.getH()/3/model.getMaxWorkers();
+
+        waitingInfo = new SimpleText<>("wait 0", colorFactory.getRed());
 
         initColumns(colorFactory, model.getColumns(), viewBounds);
     }
@@ -71,20 +76,6 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
         addView(rect);
 
         //
-        // WIP text
-        //
-
-        final SimpleText<C> wipView = new SimpleText<>("wip "+column.getWip(), colorFactory.getWhite());
-        wipView.setXPercentage(viewBounds.getX() + 0.01f);
-        wipView.setYPercentage(y);
-        wipView.setWPercentage(viewBounds.getW() - 0.02f);
-        wipView.setHPercentage(KanbanCompareModelView.textHeight);
-        wipView.setTextSize(KanbanCompareModelView.textSize);
-        addView(wipView);
-        y += KanbanCompareModelView.textHeight + KanbanCompareModelView.ySpace;
-        childHeight -= KanbanCompareModelView.textHeight + KanbanCompareModelView.ySpace;
-
-        //
         // column name
         //
 
@@ -93,8 +84,31 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
         nameView.setYPercentage(y);
         nameView.setWPercentage(viewBounds.getW() - 0.02f);
         nameView.setHPercentage(KanbanCompareModelView.textHeight);
-        nameView.setTextSize(KanbanCompareModelView.textSize);
+        nameView.setTextSize(KanbanCompareModelView.textSize+2);
         addView(nameView);
+        y += KanbanCompareModelView.textHeight + KanbanCompareModelView.ySpace;
+        childHeight -= KanbanCompareModelView.textHeight + KanbanCompareModelView.ySpace;
+
+        //
+        // WIP text / waiting time
+        //
+
+        if(column.getTypeId().equals(KanbanModel.TYPE_DONE)) {
+            waitingInfo.setXPercentage(viewBounds.getX() + 0.01f);
+            waitingInfo.setYPercentage(y);
+            waitingInfo.setWPercentage(viewBounds.getW() - 0.02f);
+            waitingInfo.setHPercentage(KanbanCompareModelView.textHeight);
+            waitingInfo.setTextSize(KanbanCompareModelView.textSize);
+            addView(waitingInfo);
+        } else {
+            final SimpleText<C> wipView = new SimpleText<>("wip " + column.getWip(), colorFactory.getWhite());
+            wipView.setXPercentage(viewBounds.getX() + 0.01f);
+            wipView.setYPercentage(y);
+            wipView.setWPercentage(viewBounds.getW() - 0.02f);
+            wipView.setHPercentage(KanbanCompareModelView.textHeight);
+            wipView.setTextSize(KanbanCompareModelView.textSize);
+            addView(wipView);
+        }
         y += KanbanCompareModelView.textHeight + KanbanCompareModelView.ySpace;
         childHeight -= KanbanCompareModelView.textHeight + KanbanCompareModelView.ySpace;
 
@@ -144,6 +158,9 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
             final CardInfo<C> cardInfoView = cardInfoMap.get(column.getId());
             if(cardInfoView!=null) {
                 cardInfoView.update();
+            }
+            if(column.getTypeId().equals(KanbanModel.TYPE_DONE)) {
+                waitingInfo.setText("wait "+(model.getWaitingTime() / Interval.MILLIS_PER_HOUR));
             }
         } else {
             throw new IllegalStateException("unexpected model object "+modelObject.getClass());
