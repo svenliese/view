@@ -23,7 +23,6 @@ class KanbanModelTest {
         final Column column2 = new Column("column2", columnType2, 0);
         final Column column3 = new Column("column3", columnType3, 0);
 
-
         final KanbanModel model = new KanbanModel(config);
         model.addColumn(column1);
         model.addColumn(column2);
@@ -54,5 +53,33 @@ class KanbanModelTest {
         Assertions.assertEquals(0, column1.getTicketCount());
         Assertions.assertEquals(0, column2.getTicketCount());
         Assertions.assertEquals(1, column3.getTicketCount());
+    }
+
+    @Test
+    void testWaitingTime() {
+
+        final KanbanConfig config = new KanbanConfig(2, 2, 8, Interval.MILLIS_PER_HOUR, Interval.MILLIS_PER_HOUR/200.0);
+        config.addInterval(KanbanModel.TYPE_IDEAS, Interval.getHourInterval(1, 1));
+        config.addInterval(KanbanModel.TYPE_PREPARE, Interval.getHourInterval(1, 1));
+        config.addInterval(KanbanModel.TYPE_WORK, Interval.getHourInterval(1, 1));
+
+        final Column column1 = new Column("column1", KanbanModel.TYPE_IDEAS, 0);
+        final Column column2 = new Column("column2", KanbanModel.TYPE_PREPARE, 1);
+        final Column column3 = new Column("column3", KanbanModel.TYPE_WORK, 1);
+        final Column column4 = new Column("column3", KanbanModel.TYPE_DONE, 0);
+
+        final KanbanModel model = new KanbanModel(config);
+        model.addColumn(column1);
+        model.addColumn(column2);
+        model.addColumn(column3);
+        model.addColumn(column4);
+        model.addCard(new Card(1, config));
+        model.addCard(new Card(2, config));
+
+        model.start();
+        model.join();
+
+        Assertions.assertEquals(1, column4.getTicketCount());
+        Assertions.assertEquals(1, model.getWaitingTime() / Interval.MILLIS_PER_HOUR);
     }
 }

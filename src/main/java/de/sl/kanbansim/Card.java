@@ -67,6 +67,16 @@ public class Card implements Comparable<Card> {
         return startBlockMillis;
     }
 
+    public long getSmallestMillis() {
+        long min = defaultMillis.longValue();
+        for(Long millis : millisByType.values()) {
+            if(millis.longValue()<min) {
+                min = millis.longValue();
+            }
+        }
+        return min;
+    }
+
     @Override
     public int compareTo(Card other) {
         return Integer.compare(id, other.id);

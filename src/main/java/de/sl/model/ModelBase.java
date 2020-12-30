@@ -13,6 +13,8 @@ public abstract class ModelBase implements Runnable {
 
     private final List<IModelListener> listeners = new ArrayList<>();
 
+    private long minMillis;
+
     private double startMillis;
 
     private boolean simStopped = false;
@@ -30,6 +32,7 @@ public abstract class ModelBase implements Runnable {
     }
 
     public void start() {
+        minMillis = getSmallestMillis();
         startMillis = System.currentTimeMillis();
         active = true;
         myThread = new Thread(this);
@@ -55,11 +58,27 @@ public abstract class ModelBase implements Runnable {
         simStopped = false;
     }
 
+    public void join() {
+        try {
+            myThread.join();
+        } catch (InterruptedException ex) {
+            // ignore
+        }
+    }
+
     @Override
     public void run() {
+        long lastELapsed = -1;
+
         while(active) {
+
             if(!simStopped) {
-                simulate((long) ((System.currentTimeMillis() - startMillis) * speed));
+                long elapsed = (long)((System.currentTimeMillis() - startMillis) * speed);
+                if(lastELapsed>0 && elapsed - lastELapsed > minMillis) {
+                    throw new IllegalStateException("simulation to slow for selected speed");
+                }
+                lastELapsed = elapsed;
+                active = simulate(elapsed);
             }
 
             try {
@@ -76,5 +95,10 @@ public abstract class ModelBase implements Runnable {
         }
     }
 
-    abstract protected void simulate(long elapsedMillis);
+    abstract public long getSmallestMillis();
+
+    /**
+     * @return false in case of simulation done
+     */
+    abstract protected boolean simulate(long elapsedMillis);
 }

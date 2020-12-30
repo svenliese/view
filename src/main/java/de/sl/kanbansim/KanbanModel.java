@@ -165,8 +165,11 @@ public class KanbanModel extends ModelBase {
         return modified;
     }
 
-    public void simulate(long elapsedMillis, ModelBase modelBase) {
+    public boolean simulate(long elapsedMillis, ModelBase modelBase) {
 
+        if(cardsToProcess.isEmpty() && columns.get(0).getTicketCount()==0 && activeCards<config.getMaxWorkers()) {
+            return false;
+        }
 
         long newElapsedDays = elapsedMillis/(60*60*1000)/config.getWorkingDayHours();
         if(newElapsedDays>elapsedDays) {
@@ -199,6 +202,8 @@ public class KanbanModel extends ModelBase {
                 modelBase.informListeners(columns.get(columns.size()-1));
             }
         }
+
+        return true;
     }
 
     public int getMaxWorkers() {
@@ -214,7 +219,19 @@ public class KanbanModel extends ModelBase {
     }
 
     @Override
-    protected void simulate(long elapsedMillis) {
-        simulate(elapsedMillis, this);
+    public long getSmallestMillis() {
+        long min = config.getDefaultMillis();
+        for(Card card : cardsToProcess) {
+            long millis = card.getSmallestMillis();
+            if(millis<min) {
+                min = millis;
+            }
+        }
+        return min;
+    }
+
+    @Override
+    protected boolean simulate(long elapsedMillis) {
+        return simulate(elapsedMillis, this);
     }
 }

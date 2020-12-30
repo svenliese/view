@@ -160,7 +160,7 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
                 cardInfoView.update();
             }
             if(column.getTypeId().equals(KanbanModel.TYPE_DONE)) {
-                waitingInfo.setText("wait "+(model.getWaitingTime() / Interval.MILLIS_PER_HOUR));
+                waitingInfo.setText("wait "+(model.getWaitingTime() / Interval.MILLIS_PER_HOUR / model.getMaxWorkers()));
             }
         } else {
             throw new IllegalStateException("unexpected model object "+modelObject.getClass());
