@@ -119,6 +119,10 @@ public class KanbanModel extends ModelBase {
      * @return true in case of changes
      */
     private boolean move(Column sourceColumn, Column targetColumn, long elapsedMillis) {
+        if(sourceColumn.getTypeId().equals(KanbanModel.TYPE_IDEAS) && activeCards>=config.getMaxWorkers()) {
+            return false;
+        }
+
         boolean modified = false;
         final Card cardToPull = sourceColumn.getCardToPull(elapsedMillis);
         if (cardToPull != null) {
@@ -194,13 +198,17 @@ public class KanbanModel extends ModelBase {
         for(int colIdx=childColumns.size()-1; colIdx>0; colIdx--) {
 
             final Column targetColumn = childColumns.get(colIdx);
-            final Column sourceColumn = childColumns.get(colIdx-1);
+            final Column sourceColumn = childColumns.get(colIdx - 1);
 
-            while(move(sourceColumn, targetColumn, elapsedMillis)) {
+            while (move(sourceColumn, targetColumn, elapsedMillis)) {
                 modelBase.informListeners(targetColumn);
                 modelBase.informListeners(sourceColumn);
-                modelBase.informListeners(columns.get(columns.size()-1));
+                modelBase.informListeners(columns.get(columns.size() - 1));
             }
+        }
+
+        if(activeCards>config.getMaxWorkers()) {
+            throw new IllegalStateException(activeCards + " active cards");
         }
 
         return true;
