@@ -119,13 +119,15 @@ public class KanbanModel extends ModelBase {
      * @return true in case of changes
      */
     private boolean move(Column sourceColumn, Column targetColumn, long elapsedMillis) {
-        if(sourceColumn.getTypeId().equals(KanbanModel.TYPE_IDEAS) && activeCards>=config.getMaxWorkers()) {
-            return false;
-        }
 
         boolean modified = false;
-        final Card cardToPull = sourceColumn.getCardToPull(elapsedMillis);
-        if (cardToPull != null) {
+
+        final List<Card> cardsToPull = sourceColumn.getCardsToPull(elapsedMillis);
+        for(Card cardToPull : cardsToPull) {
+
+            if(sourceColumn.getTypeId().equals(KanbanModel.TYPE_IDEAS) && activeCards>=config.getMaxWorkers()) {
+                break;
+            }
 
             boolean canPull = targetColumn.canPull();
 
@@ -166,6 +168,7 @@ public class KanbanModel extends ModelBase {
                 }
             }
         }
+
         return modified;
     }
 
@@ -206,7 +209,7 @@ public class KanbanModel extends ModelBase {
             final Column targetColumn = childColumns.get(colIdx);
             final Column sourceColumn = childColumns.get(colIdx - 1);
 
-            while (move(sourceColumn, targetColumn, elapsedMillis)) {
+            if (move(sourceColumn, targetColumn, elapsedMillis)) {
                 targetColumn.setModified(true);
                 sourceColumn.setModified(true);
                 // the 'done' column contains additional info, so we have to update the view

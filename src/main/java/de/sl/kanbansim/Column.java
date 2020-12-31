@@ -121,29 +121,24 @@ public class Column {
         return typeId;
     }
 
-    public Card getCardToPull(long elapsedMillis) {
+    public List<Card> getCardsToPull(long elapsedMillis) {
 
-        // get longest blocked card first
-        Card oldestBlockedCard = null;
-        for(Card card : cards.keySet()) {
-            if(card.isBlocked() && (oldestBlockedCard==null || card.getStartBlockMillis()<oldestBlockedCard.getStartBlockMillis())) {
-                oldestBlockedCard = card;
-            }
-        }
-        if(oldestBlockedCard!=null) {
-            return  oldestBlockedCard;
-        }
+        final List<Card> cardsToPull = new ArrayList<>(cards.size());
 
         for(Map.Entry<Card, Long> e : cards.entrySet()) {
             final Card card = e.getKey();
-            final Long time = card.getMillis(typeId);
-            if(time==null || time.longValue() < elapsedMillis - e.getValue().longValue()) {
-                return card;
+
+            final long timeInColumn = elapsedMillis - e.getValue().longValue();
+            final long plannedTime = card.getMillis(typeId).longValue();
+
+            if(plannedTime < timeInColumn) {
+                card.setWaitingTime(timeInColumn - plannedTime);
+                cardsToPull.add(card);
             }
         }
 
-        // no card to pull
-        return null;
+        cardsToPull.sort(new CardWaitingTimeComparator());
+        return cardsToPull;
     }
 
     public Set<Card> getCards() {
