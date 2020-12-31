@@ -21,6 +21,8 @@ public class Column {
 
     private final List<Column> children = new ArrayList<>();
 
+    private boolean modified;
+
     /** map of card's and their time when entered this column */
     private final Map<Card, Long> cards = new TreeMap<>();
 
@@ -146,6 +148,14 @@ public class Column {
 
     public Set<Card> getCards() {
         return cards.keySet();
+    }
+
+    public boolean isModified() {
+        return modified;
+    }
+
+    public void setModified(boolean modified) {
+        this.modified = modified;
     }
 
     @Override

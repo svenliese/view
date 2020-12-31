@@ -175,10 +175,16 @@ public class KanbanModel extends ModelBase {
             return false;
         }
 
+        for(Column column : childColumns) {
+            column.setModified(false);
+        }
+
         long newElapsedDays = elapsedMillis/(60*60*1000)/config.getWorkingDayHours();
         if(newElapsedDays>elapsedDays) {
             elapsedDays = newElapsedDays;
-            informListeners(columns.get(columns.size()-1));
+            // the 'done' column contains additional info, so we have to update the view
+            // todo: remove this from the model because it is view related
+            columns.get(columns.size()-1).setModified(true);
         }
 
         //
@@ -188,7 +194,7 @@ public class KanbanModel extends ModelBase {
         final Column backlogColumn = childColumns.get(0);
         while(backlogColumn.canPull() && !cardsToProcess.isEmpty()) {
             backlogColumn.addTicket(cardsToProcess.poll(), elapsedMillis);
-            modelBase.informListeners(backlogColumn);
+            backlogColumn.setModified(true);
         }
 
         //
@@ -201,14 +207,22 @@ public class KanbanModel extends ModelBase {
             final Column sourceColumn = childColumns.get(colIdx - 1);
 
             while (move(sourceColumn, targetColumn, elapsedMillis)) {
-                modelBase.informListeners(targetColumn);
-                modelBase.informListeners(sourceColumn);
-                modelBase.informListeners(columns.get(columns.size() - 1));
+                targetColumn.setModified(true);
+                sourceColumn.setModified(true);
+                // the 'done' column contains additional info, so we have to update the view
+                // todo: remove this from the model because it is view related
+                columns.get(columns.size() - 1).setModified(true);
             }
         }
 
         if(activeCards>config.getMaxWorkers()) {
             throw new IllegalStateException(activeCards + " active cards");
+        }
+
+        for(Column column : childColumns) {
+            if(column.isModified()) {
+                modelBase.informListeners(column);
+            }
         }
 
         return true;
