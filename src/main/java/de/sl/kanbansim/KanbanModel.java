@@ -97,6 +97,8 @@ public class KanbanModel extends ModelBase {
 
     private int blockedInIdeas = 0;
 
+    private long lastElapsedMillis = -1;
+
     public KanbanModel(KanbanConfig config) {
         super(config.getSpeed());
         this.config = config;
@@ -221,6 +223,17 @@ public class KanbanModel extends ModelBase {
         if(activeCards>config.getMaxWorkers()) {
             throw new IllegalStateException(activeCards + " active cards");
         }
+
+        if(lastElapsedMillis>0) {
+            final int notCountedInactiveWorkers = config.getMaxWorkers() - activeCards - blockedInIdeas;
+            if(notCountedInactiveWorkers>0) {
+                waitingTime += (elapsedMillis-lastElapsedMillis)*notCountedInactiveWorkers;
+                // the 'done' column contains additional info, so we have to update the view
+                // todo: remove this from the model because it is view related
+                columns.get(columns.size() - 1).setModified(true);
+            }
+        }
+        lastElapsedMillis = elapsedMillis;
 
         for(Column column : childColumns) {
             if(column.isModified()) {
