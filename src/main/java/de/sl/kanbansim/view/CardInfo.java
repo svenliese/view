@@ -1,5 +1,8 @@
-package de.sl.kanbansim;
+package de.sl.kanbansim.view;
 
+import de.sl.kanbansim.model.Column;
+import de.sl.kanbansim.model.KanbanModel;
+import de.sl.kanbansim.model.Card;
 import de.sl.view.*;
 
 import java.util.ArrayList;

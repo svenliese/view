@@ -1,4 +1,4 @@
-package de.sl.kanbansim;
+package de.sl.kanbansim.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +31,10 @@ public class Card implements Comparable<Card> {
         this.id = id;
         this.millisByType.putAll(millisByType);
         this.defaultMillis = defaultMillis;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Card getCopy() {
@@ -85,6 +89,16 @@ public class Card implements Comparable<Card> {
 
     public void setWaitingTime(long waitingTime) {
         this.waitingTime = waitingTime;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Card && id == ((Card)obj).id;
     }
 
     @Override

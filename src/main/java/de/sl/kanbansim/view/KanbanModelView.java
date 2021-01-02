@@ -1,5 +1,9 @@
-package de.sl.kanbansim;
+package de.sl.kanbansim.view;
 
+import de.sl.kanbansim.model.Column;
+import de.sl.kanbansim.model.KanbanModel;
+import de.sl.kanbansim.view.CardInfo;
+import de.sl.kanbansim.view.KanbanCompareModelView;
 import de.sl.model.Interval;
 import de.sl.view.*;
 

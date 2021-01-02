@@ -1,5 +1,7 @@
-package de.sl.kanbansim;
+package de.sl.kanbansim.view;
 
+import de.sl.kanbansim.model.Column;
+import de.sl.kanbansim.model.KanbanCompareModel;
 import de.sl.view.*;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package de.sl.kanbansim;
+package de.sl.kanbansim.model;
 
 import de.sl.model.ModelBase;
 
@@ -136,10 +136,13 @@ public class KanbanModel extends ModelBase {
             if(canPull) {
                 final Column targetParent = targetColumn.getParent();
                 final Column sourceParent = sourceColumn.getParent();
-                if(targetParent!=null && targetParent!=sourceParent) {
-                    if(targetParent.getWip()>0 && targetParent.getAllTicketCount()>=targetParent.getWip()) {
-                        canPull = false;
-                    }
+                if(
+                    targetParent!=null &&
+                    targetParent!=sourceParent &&
+                    targetParent.getWip()>0 &&
+                    targetParent.getAllTicketCount()>=targetParent.getWip()
+                ) {
+                    canPull = false;
                 }
             }
 

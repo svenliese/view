@@ -1,5 +1,9 @@
 package de.sl.kanbansim;
 
+import de.sl.kanbansim.model.KanbanCompareModel;
+import de.sl.kanbansim.model.KanbanConfig;
+import de.sl.kanbansim.model.KanbanModel;
+import de.sl.kanbansim.view.KanbanCompareModelView;
 import de.sl.model.Interval;
 import de.sl.view.ViewBounds;
 import de.sl.view.swing.AppBase;

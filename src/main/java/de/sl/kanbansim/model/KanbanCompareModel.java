@@ -1,4 +1,4 @@
-package de.sl.kanbansim;
+package de.sl.kanbansim.model;
 
 import de.sl.model.ModelBase;
 
