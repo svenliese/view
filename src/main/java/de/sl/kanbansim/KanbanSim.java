@@ -45,7 +45,7 @@ public class KanbanSim extends AppBase {
         final KanbanCompareModelView<Color, BufferedImage> viewModel = new KanbanCompareModelView<>(
             new SwingColorFactory(),
             compareModel,
-            new ViewBounds(0.025f, 0.025f, 0.95f, 0.95f)
+            new ViewBounds(0.01f, 0.01f, 0.98f, 0.98f)
         );
 
         compareModel.start();

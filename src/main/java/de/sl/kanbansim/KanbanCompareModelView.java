@@ -24,9 +24,22 @@ public class KanbanCompareModelView<C, I> extends ViewModel<C, I> {
         super(model);
         this.model = model;
 
-        final float height = viewBounds.getH() / 2 - 2*ySpace - textHeight;
+        final float buttonHeight = textHeight + 2*ySpace;
+        final float boardHeight = (viewBounds.getH() - 3*ySpace - buttonHeight) / 2;
 
         float y = viewBounds.getY();
+
+        button = new TextButton<>("pause", colorFactory.getWhite(), colorFactory.getBlack(), new LineProperties<>(colorFactory.getWhite(), 1.0f, false));
+        button.setXPercentage(viewBounds.getX());
+        button.setYPercentage(y);
+        button.setWPercentage(0.05f);
+        button.setHPercentage(buttonHeight);
+        button.setTextSize(textSize);
+        button.setHAlign(SimpleText.CENTER);
+        addView(button);
+
+        y += buttonHeight;
+        y += ySpace;
 
         modelView1 = new KanbanModelView<>(
             colorFactory,
@@ -35,24 +48,13 @@ public class KanbanCompareModelView<C, I> extends ViewModel<C, I> {
                     viewBounds.getX(),
                     y,
                     viewBounds.getW(),
-                    height
+                    boardHeight
                 )
         );
         addViews(modelView1.getViews());
-        y += height;
-        y += ySpace;
 
-        button = new TextButton<>("pause", colorFactory.getWhite(), colorFactory.getBlack(), new LineProperties<>(colorFactory.getWhite(), 1.0f, false));
-        button.setXPercentage(viewBounds.getX() + 0.01f);
-        button.setYPercentage(y - ySpace/2);
-        button.setWPercentage(0.05f);
-        button.setHPercentage(textHeight + ySpace);
-        button.setTextSize(textSize);
-        button.setHAlign(SimpleText.CENTER);
-        addView(button);
-
+        y += boardHeight;
         y += ySpace;
-        y += textHeight;
 
         modelView2 = new KanbanModelView<>(
             colorFactory,
@@ -61,7 +63,7 @@ public class KanbanCompareModelView<C, I> extends ViewModel<C, I> {
                 viewBounds.getX(),
                 y,
                 viewBounds.getW(),
-                height
+                boardHeight
             )
         );
         addViews(modelView2.getViews());
