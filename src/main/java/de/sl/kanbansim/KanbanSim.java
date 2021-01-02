@@ -29,11 +29,11 @@ public class KanbanSim extends AppBase {
     public static void main(String[] args) {
 
         final KanbanConfig config = new KanbanConfig(
-            10,
+            20,
             6,
             8,
             Interval.MILLIS_PER_HOUR,
-            28800.0d
+            Interval.MILLIS_PER_HOUR
         );
         config.addInterval(KanbanModel.TYPE_ANALYSIS, Interval.getHourInterval(config.getWorkingDayHours(), 3*config.getWorkingDayHours()));
         config.addInterval(KanbanModel.TYPE_CONCEPT, Interval.getHourInterval(config.getWorkingDayHours(), 3*config.getWorkingDayHours()));

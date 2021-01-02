@@ -5,7 +5,7 @@ import java.util.List;
 
 public abstract class ModelBase implements Runnable {
 
-    private final double speed;
+    private final long millisPerStep;
 
     private Thread myThread;
 
@@ -13,18 +13,12 @@ public abstract class ModelBase implements Runnable {
 
     private final List<IModelListener> listeners = new ArrayList<>();
 
-    private long minMillis;
-
-    private double startMillis;
+    private long steps;
 
     private boolean simStopped = false;
-    private double pauseStartMillis;
 
-    /**
-     * @param speed the real time will be multiplied with the given speed
-     */
-    protected ModelBase(double speed) {
-        this.speed = speed;
+    protected ModelBase(long millisPerStep) {
+        this.millisPerStep = millisPerStep;
     }
 
     public void addListener(IModelListener listener) {
@@ -32,8 +26,10 @@ public abstract class ModelBase implements Runnable {
     }
 
     public void start() {
-        minMillis = getSmallestMillis();
-        startMillis = System.currentTimeMillis();
+        if(getSmallestMillis() < millisPerStep) {
+            throw new IllegalStateException("illegal speed for model");
+        }
+        steps = 0;
         active = true;
         myThread = new Thread(this);
         myThread.setPriority(Thread.MIN_PRIORITY);
@@ -46,7 +42,6 @@ public abstract class ModelBase implements Runnable {
 
     public void pause() {
         simStopped = true;
-        pauseStartMillis = System.currentTimeMillis();
     }
 
     public boolean isPause() {
@@ -54,7 +49,6 @@ public abstract class ModelBase implements Runnable {
     }
 
     public void resume() {
-        startMillis += (System.currentTimeMillis()-pauseStartMillis);
         simStopped = false;
     }
 
@@ -68,17 +62,11 @@ public abstract class ModelBase implements Runnable {
 
     @Override
     public void run() {
-        long lastELapsed = -1;
-
         while(active) {
 
             if(!simStopped) {
-                long elapsed = (long)((System.currentTimeMillis() - startMillis) * speed);
-                if(lastELapsed>0 && elapsed - lastELapsed > minMillis) {
-                    throw new IllegalStateException("simulation to slow for selected speed");
-                }
-                lastELapsed = elapsed;
-                active = simulate(elapsed);
+                active = simulate(steps*millisPerStep);
+                steps++;
             }
 
             try {

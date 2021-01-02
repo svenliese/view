@@ -19,16 +19,16 @@ public class KanbanConfig {
 
     private final long defaultMillis;
 
-    private final double speed;
+    private final long millisPerStep;
 
     private final Map<Integer, Interval> millisByType = new TreeMap<>();
 
-    public KanbanConfig(int cardCount, int maxWorkers, int workingDayHours, long defaultMillis, double speed) {
+    public KanbanConfig(int cardCount, int maxWorkers, int workingDayHours, long defaultMillis, long millisPerStep) {
         this.cardCount = cardCount;
         this.maxWorkers = maxWorkers;
         this.workingDayHours = workingDayHours;
         this.defaultMillis = defaultMillis;
-        this.speed = speed;
+        this.millisPerStep = millisPerStep;
     }
 
     public int getCardCount() {
@@ -63,7 +63,7 @@ public class KanbanConfig {
         return millisByType.keySet();
     }
 
-    public double getSpeed() {
-        return speed;
+    public long getMillisPerStep() {
+        return millisPerStep;
     }
 }

@@ -11,7 +11,7 @@ public class KanbanCompareModel extends ModelBase {
     private final KanbanModel model2;
 
     public KanbanCompareModel(KanbanModel model1, KanbanModel model2, KanbanConfig config) {
-        super(config.getSpeed());
+        super(config.getMillisPerStep());
         this.model1 = model1;
         this.model2 = model2;
 

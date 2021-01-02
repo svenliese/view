@@ -65,6 +65,10 @@ public class Card implements Comparable<Card> {
         if(blocked) {
             blocked = false;
             blockedMillis = elapsedMillis-startBlockMillis;
+            waitingTime -= blockedMillis;
+            if(waitingTime<0) {
+                throw new IllegalStateException("waiting time = "+waitingTime);
+            }
         }
         return blockedMillis;
     }

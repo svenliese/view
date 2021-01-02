@@ -2,8 +2,6 @@ package de.sl.kanbansim.view;
 
 import de.sl.kanbansim.model.Column;
 import de.sl.kanbansim.model.KanbanModel;
-import de.sl.kanbansim.view.CardInfo;
-import de.sl.kanbansim.view.KanbanCompareModelView;
 import de.sl.model.Interval;
 import de.sl.view.*;
 
@@ -164,7 +162,7 @@ public class KanbanModelView<C, I> extends ViewModel<C, I> {
                 cardInfoView.update();
             }
             if(column.getTypeId().equals(KanbanModel.TYPE_DONE)) {
-                waitingInfo.setText("wait "+(model.getWaitingTime() / Interval.MILLIS_PER_HOUR / model.getMaxWorkers()));
+                waitingInfo.setText("wait "+(model.getBlockedTimeSum() / Interval.MILLIS_PER_HOUR / model.getMaxWorkers()));
             }
         } else {
             throw new IllegalStateException("unexpected model object "+modelObject.getClass());

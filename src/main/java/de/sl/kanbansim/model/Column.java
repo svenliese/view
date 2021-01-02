@@ -94,7 +94,7 @@ public class Column {
     }
 
     public void addTicket(Card card, long elapsedMillis) {
-        cards.put(card, Long.valueOf(elapsedMillis));
+        cards.put(card, Long.valueOf(elapsedMillis - card.getWaitingTime()));
     }
 
     public void removeTicket(Card card) {
@@ -151,6 +151,10 @@ public class Column {
 
     public void setModified(boolean modified) {
         this.modified = modified;
+    }
+
+    public Long getArrivalTime(Card card) {
+        return cards.get(card);
     }
 
     @Override

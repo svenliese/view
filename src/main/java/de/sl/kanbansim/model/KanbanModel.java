@@ -93,14 +93,14 @@ public class KanbanModel extends ModelBase {
 
     private int activeCards = 0;
 
-    private long waitingTime = 0;
+    private long blockedTimeSum = 0;
 
     private int blockedInIdeas = 0;
 
     private long lastElapsedMillis = -1;
 
     public KanbanModel(KanbanConfig config) {
-        super(config.getSpeed());
+        super(config.getMillisPerStep());
         this.config = config;
     }
 
@@ -149,7 +149,7 @@ public class KanbanModel extends ModelBase {
             if(canPull) {
                 final long blockedTime = cardToPull.unblock(elapsedMillis);
                 if(blockedTime>0) {
-                    waitingTime += blockedTime;
+                    blockedTimeSum += blockedTime;
 
                     if(sourceColumn.getTypeId().equals(KanbanModel.TYPE_IDEAS)) {
                         blockedInIdeas--;
@@ -209,6 +209,7 @@ public class KanbanModel extends ModelBase {
         // move cards over the board from right to left
         //
 
+        final int beforeFinished = childColumns.get(childColumns.size()-1).getTicketCount();
         for(int colIdx=childColumns.size()-1; colIdx>0; colIdx--) {
 
             final Column targetColumn = childColumns.get(colIdx);
@@ -222,15 +223,19 @@ public class KanbanModel extends ModelBase {
                 columns.get(columns.size() - 1).setModified(true);
             }
         }
+        final int newFinished = childColumns.get(childColumns.size()-1).getTicketCount() - beforeFinished;
 
         if(activeCards>config.getMaxWorkers()) {
             throw new IllegalStateException(activeCards + " active cards");
         }
 
         if(lastElapsedMillis>0) {
-            final int notCountedInactiveWorkers = config.getMaxWorkers() - activeCards - blockedInIdeas;
+            final int notCountedInactiveWorkers = config.getMaxWorkers() - activeCards - blockedInIdeas - newFinished;
+            if(notCountedInactiveWorkers<0){
+                System.out.println("notCountedInactiveWorkers="+notCountedInactiveWorkers);
+            }
             if(notCountedInactiveWorkers>0) {
-                waitingTime += (elapsedMillis-lastElapsedMillis)*notCountedInactiveWorkers;
+                blockedTimeSum += (elapsedMillis-lastElapsedMillis)*notCountedInactiveWorkers;
                 // the 'done' column contains additional info, so we have to update the view
                 // todo: remove this from the model because it is view related
                 columns.get(columns.size() - 1).setModified(true);
@@ -251,8 +256,8 @@ public class KanbanModel extends ModelBase {
         return config.getMaxWorkers();
     }
 
-    public long getWaitingTime() {
-        return waitingTime;
+    public long getBlockedTimeSum() {
+        return blockedTimeSum;
     }
 
     public long getElapsedDays() {
