@@ -73,20 +73,6 @@ public class Card implements Comparable<Card> {
         return blockedMillis;
     }
 
-    public long getStartBlockMillis() {
-        return startBlockMillis;
-    }
-
-    public long getSmallestMillis() {
-        long min = defaultMillis.longValue();
-        for(Long millis : millisByType.values()) {
-            if(millis.longValue()<min) {
-                min = millis.longValue();
-            }
-        }
-        return min;
-    }
-
     public long getWaitingTime() {
         return waitingTime;
     }

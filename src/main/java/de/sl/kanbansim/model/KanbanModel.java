@@ -265,18 +265,6 @@ public class KanbanModel extends ModelBase {
     }
 
     @Override
-    public long getSmallestMillis() {
-        long min = config.getDefaultMillis();
-        for(Card card : cardsToProcess) {
-            long millis = card.getSmallestMillis();
-            if(millis<min) {
-                min = millis;
-            }
-        }
-        return min;
-    }
-
-    @Override
     protected boolean simulate(long elapsedMillis) {
         return simulate(elapsedMillis, this);
     }
