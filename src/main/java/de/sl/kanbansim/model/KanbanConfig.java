@@ -9,6 +9,9 @@ import java.util.*;
  */
 public class KanbanConfig {
 
+    public static final int STOP_WHEN_NO_CARD = 1;
+    public static final int STOP_WHEN_FIRST_JOBLESS = 2;
+
     private final Random random = new Random(7);
 
     private final int cardCount;
@@ -21,14 +24,17 @@ public class KanbanConfig {
 
     private final long millisPerStep;
 
+    private final int stopMode;
+
     private final Map<Integer, Interval> millisByType = new TreeMap<>();
 
-    public KanbanConfig(int cardCount, int maxWorkers, int workingDayHours, long defaultMillis, long millisPerStep) {
+    public KanbanConfig(int cardCount, int maxWorkers, int workingDayHours, long defaultMillis, long millisPerStep, int stopMode) {
         this.cardCount = cardCount;
         this.maxWorkers = maxWorkers;
         this.workingDayHours = workingDayHours;
         this.defaultMillis = defaultMillis;
         this.millisPerStep = millisPerStep;
+        this.stopMode = stopMode;
     }
 
     public int getCardCount() {
@@ -65,5 +71,9 @@ public class KanbanConfig {
 
     public long getMillisPerStep() {
         return millisPerStep;
+    }
+
+    public int getStopMode() {
+        return stopMode;
     }
 }

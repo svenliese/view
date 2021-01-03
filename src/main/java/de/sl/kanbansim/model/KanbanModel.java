@@ -21,10 +21,10 @@ public class KanbanModel extends ModelBase {
     public static final Integer TYPE_READY_REVIEW = Integer.valueOf(13);
     public static final Integer TYPE_DONE = Integer.valueOf(15);
 
-    public static KanbanModel getWipBoard(KanbanConfig config) {
+    public static KanbanModel getNewBoard(KanbanConfig config) {
         final KanbanModel model = new KanbanModel(config);
 
-        model.addColumn(new Column("ideas", TYPE_IDEAS, 3));
+        model.addColumn(new Column("ideas", TYPE_IDEAS, 0));
 
         final Column discovery = new Column("discovery", Integer.valueOf(2), 3);
         discovery.addChild(new Column(discovery, "analysis", TYPE_ANALYSIS, 0));
@@ -51,10 +51,10 @@ public class KanbanModel extends ModelBase {
         return model;
     }
 
-    public static KanbanModel getOpenBoard(KanbanConfig config) {
+    public static KanbanModel getOldBoard(KanbanConfig config) {
         final KanbanModel model = new KanbanModel(config);
 
-        model.addColumn(new Column("ideas", TYPE_IDEAS, 3));
+        model.addColumn(new Column("ideas", TYPE_IDEAS, 0));
 
         final Column discovery = new Column("discovery", Integer.valueOf(2), 2);
         discovery.addChild(new Column(discovery, "analysis", TYPE_ANALYSIS, 0));
@@ -62,12 +62,42 @@ public class KanbanModel extends ModelBase {
         discovery.addChild(new Column(discovery, "ready", Integer.valueOf(5), 0));
         model.addColumn(discovery);
 
-        final Column dos = new Column("DOS", Integer.valueOf(6), 0);
+        final Column dos = new Column("DOS", Integer.valueOf(6), 1);
         dos.addChild(new Column(dos, "doing", Integer.valueOf(7), 0));
         dos.addChild(new Column(dos, "ready", Integer.valueOf(8), 0));
         model.addColumn(dos);
 
         final Column implementation = new Column("implementation", Integer.valueOf(9), 4);
+        implementation.addChild(new Column(implementation, "prepare", TYPE_PREPARE, 0));
+        implementation.addChild(new Column(implementation, "work", TYPE_WORK, 0));
+        implementation.addChild(new Column(implementation, "deploy", TYPE_DEPLOY, 0));
+        implementation.addChild(new Column(implementation, "ready", TYPE_READY_REVIEW, 0));
+        model.addColumn(implementation);
+
+        model.addColumn(new Column("review", Integer.valueOf(14), 1));
+
+        model.addColumn(new Column("done", TYPE_DONE, 0));
+
+        return model;
+    }
+
+    public static KanbanModel getOpenBoard(KanbanConfig config) {
+        final KanbanModel model = new KanbanModel(config);
+
+        model.addColumn(new Column("ideas", TYPE_IDEAS, 0));
+
+        final Column discovery = new Column("discovery", Integer.valueOf(2), 0);
+        discovery.addChild(new Column(discovery, "analysis", TYPE_ANALYSIS, 0));
+        discovery.addChild(new Column(discovery, "concept", TYPE_CONCEPT, 0));
+        discovery.addChild(new Column(discovery, "ready", Integer.valueOf(5), 0));
+        model.addColumn(discovery);
+
+        final Column dos = new Column("DOS", Integer.valueOf(6), 1);
+        dos.addChild(new Column(dos, "doing", Integer.valueOf(7), 0));
+        dos.addChild(new Column(dos, "ready", Integer.valueOf(8), 0));
+        model.addColumn(dos);
+
+        final Column implementation = new Column("implementation", Integer.valueOf(9), 0);
         implementation.addChild(new Column(implementation, "prepare", TYPE_PREPARE, 0));
         implementation.addChild(new Column(implementation, "work", TYPE_WORK, 0));
         implementation.addChild(new Column(implementation, "deploy", TYPE_DEPLOY, 0));
@@ -177,7 +207,7 @@ public class KanbanModel extends ModelBase {
 
     public boolean simulate(long elapsedMillis, ModelBase modelBase) {
 
-        if(cardsToProcess.isEmpty() && columns.get(0).getTicketCount()==0 && activeCards<config.getMaxWorkers()) {
+        if(cardsToProcess.isEmpty() && columns.get(0).getTicketCount()==0 && (config.getStopMode()==KanbanConfig.STOP_WHEN_NO_CARD || activeCards<config.getMaxWorkers())) {
             return false;
         }
 
@@ -194,7 +224,7 @@ public class KanbanModel extends ModelBase {
         //
 
         final Column backlogColumn = childColumns.get(0);
-        while(backlogColumn.canPull() && !cardsToProcess.isEmpty()) {
+        while(backlogColumn.canPull() && !cardsToProcess.isEmpty() && backlogColumn.getTicketCount()<config.getMaxWorkers()) {
             backlogColumn.addTicket(cardsToProcess.poll(), elapsedMillis);
             backlogColumn.setModified(true);
         }
@@ -203,7 +233,6 @@ public class KanbanModel extends ModelBase {
         // move cards over the board from right to left
         //
 
-        final int beforeFinished = childColumns.get(childColumns.size()-1).getTicketCount();
         for(int colIdx=childColumns.size()-1; colIdx>0; colIdx--) {
 
             final Column targetColumn = childColumns.get(colIdx);
@@ -214,21 +243,11 @@ public class KanbanModel extends ModelBase {
                 sourceColumn.setModified(true);
             }
         }
-        final int newFinished = childColumns.get(childColumns.size()-1).getTicketCount() - beforeFinished;
 
         if(activeCards>config.getMaxWorkers()) {
             throw new IllegalStateException(activeCards + " active cards");
         }
 
-        if(lastElapsedMillis>0) {
-            final int notCountedInactiveWorkers = config.getMaxWorkers() - activeCards - blockedInIdeas - newFinished;
-            if(notCountedInactiveWorkers<0){
-                System.out.println("notCountedInactiveWorkers="+notCountedInactiveWorkers);
-            }
-            if(notCountedInactiveWorkers>0) {
-                blockedTimeSum += (elapsedMillis-lastElapsedMillis)*notCountedInactiveWorkers;
-            }
-        }
         lastElapsedMillis = elapsedMillis;
 
         for(Column column : childColumns) {

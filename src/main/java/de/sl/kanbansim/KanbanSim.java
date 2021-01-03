@@ -33,7 +33,8 @@ public class KanbanSim extends AppBase {
             6,
             8,
             Interval.MILLIS_PER_HOUR,
-            Interval.MILLIS_PER_HOUR
+            Interval.MILLIS_PER_HOUR,
+            KanbanConfig.STOP_WHEN_NO_CARD
         );
         config.addInterval(KanbanModel.TYPE_ANALYSIS, Interval.getHourInterval(config.getWorkingDayHours(), 3*config.getWorkingDayHours()));
         config.addInterval(KanbanModel.TYPE_CONCEPT, Interval.getHourInterval(config.getWorkingDayHours(), 3*config.getWorkingDayHours()));
@@ -42,7 +43,7 @@ public class KanbanSim extends AppBase {
         config.addInterval(KanbanModel.TYPE_DEPLOY, Interval.getHourInterval(config.getWorkingDayHours(), 2*config.getWorkingDayHours()));
         config.addInterval(KanbanModel.TYPE_READY_REVIEW, Interval.getHourInterval(6, 24));
 
-        final KanbanModel model1 = KanbanModel.getWipBoard(config);
+        final KanbanModel model1 = KanbanModel.getNewBoard(config);
         final KanbanModel model2 = KanbanModel.getOpenBoard(config);
         final KanbanCompareModel compareModel = new KanbanCompareModel(model1, model2, config);
 
