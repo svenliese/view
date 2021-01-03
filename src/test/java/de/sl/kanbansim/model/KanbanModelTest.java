@@ -38,12 +38,6 @@ class KanbanModelTest {
 
         // one hour elapsed, the card should remain in the first column
         model.simulate(Interval.MILLIS_PER_HOUR);
-        Assertions.assertEquals(1, column1.getTicketCount());
-        Assertions.assertEquals(0, column2.getTicketCount());
-        Assertions.assertEquals(0, column3.getTicketCount());
-
-        // more than one hour elapsed, the card should be moved to the second column
-        model.simulate(Interval.MILLIS_PER_HOUR+1);
         Assertions.assertEquals(0, column1.getTicketCount());
         Assertions.assertEquals(Interval.MILLIS_PER_HOUR, column2.getArrivalTime(card));
         Assertions.assertEquals(1, column2.getTicketCount());
@@ -51,12 +45,6 @@ class KanbanModelTest {
 
         // two hours elapsed, the card should remain in the second column
         model.simulate(2*Interval.MILLIS_PER_HOUR);
-        Assertions.assertEquals(0, column1.getTicketCount());
-        Assertions.assertEquals(1, column2.getTicketCount());
-        Assertions.assertEquals(0, column3.getTicketCount());
-
-        // more than two hours elapsed, the card should be moved to the last column
-        model.simulate(2*Interval.MILLIS_PER_HOUR+1);
         Assertions.assertEquals(0, column1.getTicketCount());
         Assertions.assertEquals(0, column2.getTicketCount());
         Assertions.assertEquals(2*Interval.MILLIS_PER_HOUR, column3.getArrivalTime(card));
@@ -92,15 +80,6 @@ class KanbanModelTest {
         //
         model.simulate(0);
         Assertions.assertEquals(0, model.getBlockedTimeSum());
-        Assertions.assertEquals(2, column1.getTicketCount());
-        Assertions.assertEquals(0, column1.getArrivalTime(card1));
-        Assertions.assertEquals(0, column1.getArrivalTime(card2));
-
-        //
-        // 1 hour elapsed
-        //
-        model.simulate(config.getMillisPerStep());
-        Assertions.assertEquals(0, model.getBlockedTimeSum());
         // column1
         Assertions.assertEquals(1, column1.getTicketCount());
         Assertions.assertEquals(0, column1.getArrivalTime(card2));
@@ -108,8 +87,8 @@ class KanbanModelTest {
         Assertions.assertEquals(1, column2.getTicketCount());
         Assertions.assertEquals(0, column2.getArrivalTime(card1));
 
-        // 2 hour elapsed
-        model.simulate(2*config.getMillisPerStep());
+        // 1 hour elapsed
+        model.simulate(config.getMillisPerStep());
         Assertions.assertEquals(Interval.MILLIS_PER_HOUR, model.getBlockedTimeSum());
         // column1
         Assertions.assertEquals(0, column1.getTicketCount());
@@ -120,8 +99,8 @@ class KanbanModelTest {
         Assertions.assertEquals(1, column3.getTicketCount());
         Assertions.assertEquals(Interval.MILLIS_PER_HOUR, column3.getArrivalTime(card1));
 
-        // 3 hour elapsed
-        model.simulate(3*config.getMillisPerStep());
+        // 2 hour elapsed
+        model.simulate(2*config.getMillisPerStep());
         Assertions.assertEquals(Interval.MILLIS_PER_HOUR, model.getBlockedTimeSum());
         // column1
         Assertions.assertEquals(0, column1.getTicketCount());
@@ -134,34 +113,73 @@ class KanbanModelTest {
         Assertions.assertEquals(1, column4.getTicketCount());
         Assertions.assertEquals(2*Interval.MILLIS_PER_HOUR, column4.getArrivalTime(card1));
 
-        Assertions.assertFalse(model.simulate(4*config.getMillisPerStep()));
+        Assertions.assertFalse(model.simulate(3*config.getMillisPerStep()));
     }
 
     @Test
     void testBlockedTime() {
 
-        final KanbanConfig config = new KanbanConfig(2, 2, 8, Interval.MILLIS_PER_HOUR, Interval.MILLIS_PER_HOUR);
-        config.addInterval(KanbanModel.TYPE_IDEAS, Interval.getHourInterval(1, 1));
-        config.addInterval(KanbanModel.TYPE_PREPARE, Interval.getHourInterval(1, 1));
-        config.addInterval(KanbanModel.TYPE_WORK, Interval.getHourInterval(1, 1));
+        for(int speed = 1; speed <= 3; speed++) {
+            final KanbanConfig config = new KanbanConfig(2, 2, 8, Interval.MILLIS_PER_HOUR, Interval.MILLIS_PER_HOUR / speed);
+            config.addInterval(KanbanModel.TYPE_IDEAS, Interval.getHourInterval(1, 1));
+            config.addInterval(KanbanModel.TYPE_PREPARE, Interval.getHourInterval(1, 1));
+            config.addInterval(KanbanModel.TYPE_WORK, Interval.getHourInterval(1, 1));
 
-        final Column column1 = new Column("column1", KanbanModel.TYPE_IDEAS, 0);
-        final Column column2 = new Column("column2", KanbanModel.TYPE_PREPARE, 1);
-        final Column column3 = new Column("column3", KanbanModel.TYPE_WORK, 1);
-        final Column column4 = new Column("column3", KanbanModel.TYPE_DONE, 0);
+            final Column column1 = new Column("column1", KanbanModel.TYPE_IDEAS, 0);
+            final Column column2 = new Column("column2", KanbanModel.TYPE_PREPARE, 1);
+            final Column column3 = new Column("column3", KanbanModel.TYPE_WORK, 1);
+            final Column column4 = new Column("column3", KanbanModel.TYPE_DONE, 0);
 
-        final KanbanModel model = new KanbanModel(config);
-        model.addColumn(column1);
-        model.addColumn(column2);
-        model.addColumn(column3);
-        model.addColumn(column4);
-        model.addCard(new Card(1, config));
-        model.addCard(new Card(2, config));
+            final KanbanModel model = new KanbanModel(config);
+            model.addColumn(column1);
+            model.addColumn(column2);
+            model.addColumn(column3);
+            model.addColumn(column4);
+            model.addCard(new Card(1, config));
+            model.addCard(new Card(2, config));
 
-        model.start();
-        model.join();
+            model.start();
+            model.join();
 
-        Assertions.assertEquals(1, column4.getTicketCount());
-        Assertions.assertEquals(1, model.getBlockedTimeSum() / Interval.MILLIS_PER_HOUR);
+            Assertions.assertEquals(1, column4.getTicketCount());
+            Assertions.assertEquals(1, model.getBlockedTimeSum() / Interval.MILLIS_PER_HOUR, "error by speed "+speed);
+        }
+    }
+
+    @Test
+    void testNoBlockedTime() {
+
+        for(long speed = 2; speed <= 5; speed++) {
+            final KanbanConfig config = new KanbanConfig(2, 2, 8, Interval.MILLIS_PER_HOUR, Interval.MILLIS_PER_HOUR / speed);
+
+            final Column column1 = new Column("column1", KanbanModel.TYPE_IDEAS, 0);
+            final Column column2 = new Column("column2", KanbanModel.TYPE_PREPARE, 1);
+            final Column column3 = new Column("column3", KanbanModel.TYPE_WORK, 1);
+            final Column column4 = new Column("column3", KanbanModel.TYPE_DONE, 0);
+
+            final KanbanModel model = new KanbanModel(config);
+            model.addColumn(column1);
+            model.addColumn(column2);
+            model.addColumn(column3);
+            model.addColumn(column4);
+
+            final Card card1 = new Card(1, config);
+            card1.setMillis(KanbanModel.TYPE_IDEAS, Interval.MILLIS_PER_HOUR / 2);
+            card1.setMillis(KanbanModel.TYPE_PREPARE, Interval.MILLIS_PER_HOUR);
+            card1.setMillis(KanbanModel.TYPE_WORK, Interval.MILLIS_PER_HOUR / 2);
+            model.addCard(card1);
+
+            final Card card2 = new Card(2, config);
+            card2.setMillis(KanbanModel.TYPE_IDEAS, Interval.MILLIS_PER_HOUR);
+            card2.setMillis(KanbanModel.TYPE_PREPARE, Interval.MILLIS_PER_HOUR / 2);
+            card2.setMillis(KanbanModel.TYPE_WORK, Interval.MILLIS_PER_HOUR);
+            model.addCard(card2);
+
+            model.start();
+            model.join();
+
+            Assertions.assertEquals(1, column4.getTicketCount());
+            Assertions.assertEquals(Interval.MILLIS_PER_HOUR * 2, model.getElapsedTime());
+        }
     }
 }

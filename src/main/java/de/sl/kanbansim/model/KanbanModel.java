@@ -89,8 +89,6 @@ public class KanbanModel extends ModelBase {
 
     private final Queue<Card> cardsToProcess = new LinkedList<>();
 
-    private long elapsedDays = 0;
-
     private int activeCards = 0;
 
     private long blockedTimeSum = 0;
@@ -187,13 +185,9 @@ public class KanbanModel extends ModelBase {
             column.setModified(false);
         }
 
-        long newElapsedDays = elapsedMillis/(60*60*1000)/config.getWorkingDayHours();
-        if(newElapsedDays>elapsedDays) {
-            elapsedDays = newElapsedDays;
-            // the 'done' column contains additional info, so we have to update the view
-            // todo: remove this from the model because it is view related
-            columns.get(columns.size()-1).setModified(true);
-        }
+        // the 'done' column contains additional info, so we have to update the view
+        // todo: remove this from the model because it is view related
+        columns.get(columns.size()-1).setModified(true);
 
         //
         // fill backlog
@@ -218,9 +212,6 @@ public class KanbanModel extends ModelBase {
             if (move(sourceColumn, targetColumn, elapsedMillis)) {
                 targetColumn.setModified(true);
                 sourceColumn.setModified(true);
-                // the 'done' column contains additional info, so we have to update the view
-                // todo: remove this from the model because it is view related
-                columns.get(columns.size() - 1).setModified(true);
             }
         }
         final int newFinished = childColumns.get(childColumns.size()-1).getTicketCount() - beforeFinished;
@@ -236,9 +227,6 @@ public class KanbanModel extends ModelBase {
             }
             if(notCountedInactiveWorkers>0) {
                 blockedTimeSum += (elapsedMillis-lastElapsedMillis)*notCountedInactiveWorkers;
-                // the 'done' column contains additional info, so we have to update the view
-                // todo: remove this from the model because it is view related
-                columns.get(columns.size() - 1).setModified(true);
             }
         }
         lastElapsedMillis = elapsedMillis;
@@ -260,8 +248,24 @@ public class KanbanModel extends ModelBase {
         return blockedTimeSum;
     }
 
-    public long getElapsedDays() {
-        return elapsedDays;
+    public int getWorkingDayHours() {
+        return config.getWorkingDayHours();
+    }
+
+    public long getElapsedTime() {
+        return lastElapsedMillis;
+    }
+
+    @Override
+    public long getSmallestMillis() {
+        long min = config.getDefaultMillis();
+        for(Card card : cardsToProcess) {
+            long millis = card.getSmallestMillis();
+            if(millis<min) {
+                min = millis;
+            }
+        }
+        return min;
     }
 
     @Override

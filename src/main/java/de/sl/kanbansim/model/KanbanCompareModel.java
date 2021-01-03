@@ -31,6 +31,11 @@ public class KanbanCompareModel extends ModelBase {
     }
 
     @Override
+    public long getSmallestMillis() {
+        return Math.min(model1.getSmallestMillis(), model2.getSmallestMillis());
+    }
+
+    @Override
     protected boolean simulate(long elapsedMillis) {
         boolean active = false;
         if(model1.simulate(elapsedMillis, this)) {

@@ -131,7 +131,7 @@ public class Column {
             final long timeInColumn = elapsedMillis - e.getValue().longValue();
             final long plannedTime = card.getMillis(typeId).longValue();
 
-            if(plannedTime < timeInColumn) {
+            if(plannedTime <= timeInColumn) {
                 card.setWaitingTime(timeInColumn - plannedTime);
                 cardsToPull.add(card);
             }

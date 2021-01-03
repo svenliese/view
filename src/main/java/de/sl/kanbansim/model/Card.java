@@ -49,6 +49,10 @@ public class Card implements Comparable<Card> {
         return result;
     }
 
+    public void setMillis(Integer type, long millis) {
+        millisByType.put(type, Long.valueOf(millis));
+    }
+
     public void setBlocked(long elapsedMillis) {
         if(!blocked) {
             blocked = true;
@@ -79,6 +83,16 @@ public class Card implements Comparable<Card> {
 
     public void setWaitingTime(long waitingTime) {
         this.waitingTime = waitingTime;
+    }
+
+    public long getSmallestMillis() {
+        long min = defaultMillis.longValue();
+        for(Long millis : millisByType.values()) {
+            if(millis.longValue()<min) {
+                min = millis.longValue();
+            }
+        }
+        return min;
     }
 
     @Override

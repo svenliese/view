@@ -3,6 +3,7 @@ package de.sl.kanbansim.view;
 import de.sl.kanbansim.model.Column;
 import de.sl.kanbansim.model.KanbanModel;
 import de.sl.kanbansim.model.Card;
+import de.sl.model.Interval;
 import de.sl.view.*;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class CardInfo<C> {
     }
 
     private String getTimeInfoText() {
-        return "days "+model.getElapsedDays();
+        return "days "+model.getElapsedTime() / Interval.MILLIS_PER_HOUR / model.getWorkingDayHours();
     }
 
     public void update() {

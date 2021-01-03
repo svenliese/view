@@ -26,6 +26,9 @@ public abstract class ModelBase implements Runnable {
     }
 
     public void start() {
+        if(getSmallestMillis() < millisPerStep) {
+            throw new IllegalStateException("illegal speed for model");
+        }
         steps = 0;
         active = true;
         myThread = new Thread(this);
@@ -79,6 +82,8 @@ public abstract class ModelBase implements Runnable {
             listener.handleModelUpdate(modelObject);
         }
     }
+
+    abstract public long getSmallestMillis();
 
     /**
      * @return false in case of simulation done
