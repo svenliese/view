@@ -13,7 +13,15 @@ class CardWaitingTimeComparatorTest {
 
     @Test
     void testCompare() {
-        final KanbanConfig config = new KanbanConfig(0, 0, 0, 0, 0, KanbanConfig.STOP_WHEN_NO_CARD);
+        final KanbanConfig config = new KanbanConfig(
+            0,
+            0,
+            0,
+            0,
+            0,
+            KanbanConfig.STOP_WHEN_NO_CARD,
+            KanbanConfig.COUNT_BLOCKING_FROM_BEGINNING
+        );
         final List<Card> cards = new ArrayList<>();
 
         final Card card1 = new Card(1, config);

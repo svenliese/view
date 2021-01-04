@@ -34,7 +34,8 @@ public class KanbanSim extends AppBase {
             8,
             Interval.MILLIS_PER_HOUR,
             Interval.MILLIS_PER_HOUR,
-            KanbanConfig.STOP_WHEN_NO_CARD
+            KanbanConfig.STOP_WHEN_NO_CARD,
+            KanbanConfig.COUNT_BLOCKING_FIRST_DONE
         );
         config.addInterval(KanbanModel.TYPE_ANALYSIS, Interval.getHourInterval(config.getWorkingDayHours(), 3*config.getWorkingDayHours()));
         config.addInterval(KanbanModel.TYPE_CONCEPT, Interval.getHourInterval(config.getWorkingDayHours(), 3*config.getWorkingDayHours()));

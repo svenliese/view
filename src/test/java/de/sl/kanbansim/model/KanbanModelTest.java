@@ -14,7 +14,15 @@ class KanbanModelTest {
         final Integer columnType1 = Integer.valueOf(1);
         final Integer columnType2 = Integer.valueOf(2);
 
-        final KanbanConfig config = new KanbanConfig(1, 1, 8, 0, 1000, KanbanConfig.STOP_WHEN_FIRST_JOBLESS);
+        final KanbanConfig config = new KanbanConfig(
+            1,
+            1,
+            8,
+            0,
+            1000,
+            KanbanConfig.STOP_WHEN_FIRST_JOBLESS,
+            KanbanConfig.COUNT_BLOCKING_FROM_BEGINNING
+        );
         config.addInterval(columnType1, Interval.getHourInterval(1, 1));
         config.addInterval(columnType2, Interval.getHourInterval(1, 1));
 
@@ -54,7 +62,15 @@ class KanbanModelTest {
     @Test
     void testBlockedTimeStepByStep() {
 
-        final KanbanConfig config = new KanbanConfig(2, 2, 8, 0, Interval.MILLIS_PER_HOUR, KanbanConfig.STOP_WHEN_FIRST_JOBLESS);
+        final KanbanConfig config = new KanbanConfig(
+            2,
+            2,
+            8,
+            0,
+            Interval.MILLIS_PER_HOUR,
+            KanbanConfig.STOP_WHEN_FIRST_JOBLESS,
+            KanbanConfig.COUNT_BLOCKING_FROM_BEGINNING
+        );
         config.addInterval(KanbanModel.TYPE_PREPARE, Interval.getHourInterval(1, 1));
         config.addInterval(KanbanModel.TYPE_WORK, Interval.getHourInterval(1, 1));
 
@@ -120,7 +136,15 @@ class KanbanModelTest {
     void testBlockedTime() {
 
         for(int speed = 1; speed <= 3; speed++) {
-            final KanbanConfig config = new KanbanConfig(2, 2, 8, Interval.MILLIS_PER_HOUR, Interval.MILLIS_PER_HOUR / speed, KanbanConfig.STOP_WHEN_FIRST_JOBLESS);
+            final KanbanConfig config = new KanbanConfig(
+                2,
+                2,
+                8,
+                Interval.MILLIS_PER_HOUR,
+                Interval.MILLIS_PER_HOUR / speed,
+                KanbanConfig.STOP_WHEN_FIRST_JOBLESS,
+                KanbanConfig.COUNT_BLOCKING_FROM_BEGINNING
+            );
             config.addInterval(KanbanModel.TYPE_IDEAS, Interval.getHourInterval(1, 1));
             config.addInterval(KanbanModel.TYPE_PREPARE, Interval.getHourInterval(1, 1));
             config.addInterval(KanbanModel.TYPE_WORK, Interval.getHourInterval(1, 1));
@@ -150,7 +174,15 @@ class KanbanModelTest {
     void testNoBlockedTime() {
 
         for(long speed = 2; speed <= 5; speed++) {
-            final KanbanConfig config = new KanbanConfig(2, 2, 8, Interval.MILLIS_PER_HOUR, Interval.MILLIS_PER_HOUR / speed, KanbanConfig.STOP_WHEN_FIRST_JOBLESS);
+            final KanbanConfig config = new KanbanConfig(
+                2,
+                2,
+                8,
+                Interval.MILLIS_PER_HOUR,
+                Interval.MILLIS_PER_HOUR / speed,
+                KanbanConfig.STOP_WHEN_FIRST_JOBLESS,
+                KanbanConfig.COUNT_BLOCKING_FROM_BEGINNING
+            );
 
             final Column column1 = new Column("column1", KanbanModel.TYPE_IDEAS, 0);
             final Column column2 = new Column("column2", KanbanModel.TYPE_PREPARE, 1);

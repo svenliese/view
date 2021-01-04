@@ -12,6 +12,9 @@ public class KanbanConfig {
     public static final int STOP_WHEN_NO_CARD = 1;
     public static final int STOP_WHEN_FIRST_JOBLESS = 2;
 
+    public static final int COUNT_BLOCKING_FROM_BEGINNING = 3;
+    public static final int COUNT_BLOCKING_FIRST_DONE = 4;
+
     private final Random random = new Random(7);
 
     private final int cardCount;
@@ -26,15 +29,18 @@ public class KanbanConfig {
 
     private final int stopMode;
 
+    private final int blockMode;
+
     private final Map<Integer, Interval> millisByType = new TreeMap<>();
 
-    public KanbanConfig(int cardCount, int maxWorkers, int workingDayHours, long defaultMillis, long millisPerStep, int stopMode) {
+    public KanbanConfig(int cardCount, int maxWorkers, int workingDayHours, long defaultMillis, long millisPerStep, int stopMode, int blockMode) {
         this.cardCount = cardCount;
         this.maxWorkers = maxWorkers;
         this.workingDayHours = workingDayHours;
         this.defaultMillis = defaultMillis;
         this.millisPerStep = millisPerStep;
         this.stopMode = stopMode;
+        this.blockMode = blockMode;
     }
 
     public int getCardCount() {
@@ -75,5 +81,9 @@ public class KanbanConfig {
 
     public int getStopMode() {
         return stopMode;
+    }
+
+    public int getBlockMode() {
+        return blockMode;
     }
 }

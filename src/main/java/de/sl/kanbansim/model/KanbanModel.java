@@ -177,7 +177,9 @@ public class KanbanModel extends ModelBase {
             if(canPull) {
                 final long blockedTime = cardToPull.unblock(elapsedMillis);
                 if(blockedTime>0) {
-                    blockedTimeSum += blockedTime;
+                    if(config.getBlockMode()==KanbanConfig.COUNT_BLOCKING_FROM_BEGINNING || columns.get(columns.size()-1).getTicketCount()>0) {
+                        blockedTimeSum += blockedTime;
+                    }
 
                     if(sourceColumn.getTypeId().equals(KanbanModel.TYPE_IDEAS)) {
                         blockedInIdeas--;
