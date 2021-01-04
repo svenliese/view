@@ -31,6 +31,8 @@ public class KanbanConfig {
 
     private final int blockMode;
 
+    private final double leadTimePercentage = 0.8d;
+
     private final Map<Integer, Interval> millisByType = new TreeMap<>();
 
     public KanbanConfig(int cardCount, int maxWorkers, int workingDayHours, long defaultMillis, long millisPerStep, int stopMode, int blockMode) {
@@ -85,5 +87,9 @@ public class KanbanConfig {
 
     public int getBlockMode() {
         return blockMode;
+    }
+
+    public double getLeadTimePercentage() {
+        return leadTimePercentage;
     }
 }

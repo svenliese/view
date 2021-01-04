@@ -29,7 +29,7 @@ public class KanbanSim extends AppBase {
     public static void main(String[] args) {
 
         final KanbanConfig config = new KanbanConfig(
-            20,
+            50,
             6,
             8,
             Interval.MILLIS_PER_HOUR,

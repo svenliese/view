@@ -117,6 +117,10 @@ public class Column {
         return sum;
     }
 
+    public Collection<Card> getTickets() {
+        return cards.keySet();
+    }
+
     public Integer getTypeId() {
         return typeId;
     }

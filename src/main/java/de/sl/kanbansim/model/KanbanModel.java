@@ -190,8 +190,10 @@ public class KanbanModel extends ModelBase {
                 targetColumn.addTicket(cardToPull, elapsedMillis);
                 if (targetColumn.getTypeId().equals(KanbanModel.TYPE_DONE)) {
                     activeCards--;
+                    cardToPull.setDoneMillis(elapsedMillis);
                 } else if (sourceColumn.getTypeId().equals(KanbanModel.TYPE_IDEAS)) {
                     activeCards++;
+                    cardToPull.setStartMillis(elapsedMillis);
                 }
                 modified = true;
             } else if(!cardToPull.isBlocked() && (!sourceColumn.getTypeId().equals(KanbanModel.TYPE_IDEAS) || activeCards+blockedInIdeas<config.getMaxWorkers())) {
@@ -275,6 +277,17 @@ public class KanbanModel extends ModelBase {
 
     public long getElapsedTime() {
         return lastElapsedMillis;
+    }
+
+    public long getLeadTime() {
+        final Column doneColumn = columns.get(columns.size()-1);
+        final List<Card> cards = new ArrayList<>(doneColumn.getTickets());
+        if(cards.isEmpty()) {
+            return 0;
+        }
+        cards.sort(new CardLeadTimeComparator());
+        final int leadTimeIdx = (int)(cards.size() * config.getLeadTimePercentage());
+        return cards.get(leadTimeIdx).getLeadTimeMillis();
     }
 
     @Override

@@ -19,6 +19,9 @@ public class Card implements Comparable<Card> {
 
     private long waitingTime;
 
+    private long startMillis;
+    private long doneMillis;
+
     public Card(int id, KanbanConfig config) {
         this.id = id;
         this.defaultMillis = Long.valueOf(config.getDefaultMillis());
@@ -60,6 +63,10 @@ public class Card implements Comparable<Card> {
         }
     }
 
+    public long getLeadTimeMillis() {
+        return doneMillis-startMillis;
+    }
+
     public boolean isBlocked() {
         return blocked;
     }
@@ -93,6 +100,22 @@ public class Card implements Comparable<Card> {
             }
         }
         return min;
+    }
+
+    public long getStartMillis() {
+        return startMillis;
+    }
+
+    public void setStartMillis(long startMillis) {
+        this.startMillis = startMillis;
+    }
+
+    public long getDoneMillis() {
+        return doneMillis;
+    }
+
+    public void setDoneMillis(long doneMillis) {
+        this.doneMillis = doneMillis;
     }
 
     @Override
